@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101719">
+  <title>RIFT / TWENTY — 균열의 투기장</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%23d5b779' d='M20 0 26 14 40 20 26 26 20 40 14 26 0 20 14 14Z'/%3E%3C/svg%3E">
+  <style>
+    html,body{margin:0;height:100%;background:#080e11;color:#ecede4;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+    [hidden]{display:none!important}
+    #screen-loading{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:#080e11;text-align:center;padding:24px;box-sizing:border-box}
+    #screen-loading>div{width:min(440px,100%)}
+    #loading-title{font:600 28px/1.4 Georgia,serif;letter-spacing:.12em;margin:0 0 24px;color:#d5b779}
+    #loading-message{font-size:14px;line-height:1.8;min-height:52px;max-width:440px;margin:0}
+    #loading-message[data-failed]{color:#eaa89e}
+    #loading-retry{display:inline-block;font-size:12px;line-height:24px;color:#a7b7b0;margin-top:20px;text-decoration:underline}
+    #loading-retry:focus-visible{outline:2px solid #d5b779;outline-offset:5px}
+  </style>
+</head>
+<body data-screen="loading" data-motion="full">
+  <section id="screen-loading" aria-labelledby="loading-title" aria-busy="true"><div><h1 id="loading-title">RIFT / TWENTY</h1><p id="loading-message" role="status" aria-live="polite">투기장을 준비합니다.</p><a id="loading-retry" href="./">다시 불러오기</a><noscript><p>플레이하려면 JavaScript를 켜 주세요.</p></noscript></div></section>
+  <canvas id="game" hidden inert tabindex="0" aria-label="보스 결투장. WASD 이동, 마우스 조준, 좌클릭 공격, Ctrl 또는 Space 회피, Q 반격 각인, Esc 일시정지."></canvas>
+
+  <div id="hud" hidden>
+    <div class="run-heading"><span class="sigil" aria-hidden="true">✧</span><div><span class="eyebrow">THE CRUCIBLE</span><strong id="hud-stage"></strong></div></div>
+    <div id="hud-storm" class="storm-status" role="status" aria-live="polite"></div>
+    <div class="boss-hud">
+      <div class="boss-heading"><span id="hud-boss-title" class="eyebrow"></span><span id="hud-boss-hp"></span></div>
+      <h2 id="hud-boss-name"></h2>
+      <div class="bar boss-track"><div id="hud-boss-bar" class="bar-fill boss"></div><i></i><i></i><i></i></div>
+      <div id="hud-warning" class="warning" role="status" aria-live="polite"></div>
+      <div id="hud-cast-progress" class="cast-progress" aria-hidden="true"></div>
+      <div id="hud-raid" class="raid-cue" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="hud-raid-round"></strong><span id="hud-raid-hint"></span><small id="hud-raid-note">보스 강인함 · 받는 피해 <span id="hud-raid-mitigation">20%</span> 감소 · 이동하며 공격 가능</small></div>
+    </div>
+    <div class="run-controls"><div id="stage-track" aria-label="보스 처치 진행"></div><button id="pause-button" type="button" aria-label="일시정지">Ⅱ <span>ESC</span></button></div>
+    <div class="player-hud">
+      <canvas id="hud-portrait" width="120" height="120" aria-hidden="true"></canvas>
+      <div class="vitals"><div class="vitals-heading"><strong id="hud-loadout"></strong><span id="hud-player-hp"></span></div><div class="bar health-track"><div id="hud-player-bar" class="bar-fill player"></div></div><div class="vitals-footer"><span id="hud-shield"></span><strong id="danger-label" hidden>⚠ 생명력 위험</strong></div></div>
+    </div>
+    <div class="combat-controls"><div><kbd>좌클릭</kbd><span id="hud-attack"></span><span id="hud-weapon-state"></span></div><div><kbd>SPACE / CTRL</kbd><span id="hud-dodge"></span><span class="dodge-track"><i id="hud-dodge-bar"></i></span></div></div>
+    <div id="evade-hud" class="evade-hud" role="img" aria-label="회피 준비">
+      <div class="evade-ring"><svg class="evade-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="m8 28 11-9-5-7 15-4-6 9 7 7-9 8 3-9-6-1-8 9M5 18h7M3 23h6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/></svg><strong id="evade-seconds"></strong></div>
+      <kbd>SPACE</kbd><span id="evade-label">회피 준비</span>
+    </div>
+    <div id="counter-hud" class="evade-hud counter-hud" role="img" aria-label="Q 반격" hidden>
+      <div class="evade-ring"><svg class="evade-icon" viewBox="0 0 40 40" aria-hidden="true"><path d="m20 5 12 5v10c0 7-6 11-12 15C14 31 8 27 8 20V10Zm-7 16h14m-5-6 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg><strong id="counter-seconds"></strong></div>
+      <kbd>Q</kbd><span id="counter-label">반격</span>
+    </div>
+    <div class="build-hud"><span class="eyebrow">이번 런의 각인</span><div id="hud-build"></div><p id="hud-build-summary" class="build-summary"></p></div><div id="hud-timing-cue" class="timing-cue" role="status" aria-live="off"></div>
+    <aside id="tutorial-guide" class="tutorial-guide" aria-labelledby="tutorial-heading" hidden>
+      <span class="eyebrow gold">부담 없는 조작 연습</span>
+      <div role="status" aria-live="polite" aria-atomic="true"><h3 id="tutorial-heading"></h3><p id="tutorial-description"></p></div>
+      <ol class="tutorial-checks"><li id="tutorial-move">○ 이동 · WASD</li><li id="tutorial-hit">○ 명중 · 마우스 조준 + 좌클릭</li><li id="tutorial-dodge">○ 회피 · Space / Ctrl</li></ol>
+      <p id="tutorial-class-tip" class="tutorial-class-tip"></p>
+      <small>맞아도 죽지 않습니다. 자기장·보상 없음.<br>안내를 익히면 보스를 마무리할 수 있습니다.</small>
+      <button id="tutorial-exit" type="button" class="text-button">연습 끝내기 · 직업 선택으로</button>
+    </aside>
+  </div>
+  <div id="stage-intro" aria-live="polite" hidden><span class="eyebrow" id="intro-stage"></span><strong id="intro-name"></strong></div>
+
+  <section id="screen-home" class="overlay home-screen" aria-labelledby="home-title" hidden>
+    <div class="home-shell"><div class="home-copy"><span class="eyebrow gold">RIFT / TWENTY · A BOSS RUSH</span><h1 id="home-title">균열의<br><em>투기장</em><span class="title-dot">.</span></h1><p class="intro-copy">당신의 무기. 열아홉 번의 선택.<br>스무 번째 보스 너머에, 당신의 기록.</p><div class="home-actions"><button id="home-start" type="button" class="primary">게임 시작 <span aria-hidden="true">↗</span></button><button id="home-ranking" type="button" class="practice-button">랭킹 · 완주 기록</button></div><p class="muted small">PC · 키보드와 마우스<br>처음이라면 직업 선택 후 조작 연습을 이용하세요.</p><div class="audio-controls"><label>소리 <input data-audio-volume type="range" min="0" max="100" value="45" aria-label="전체 음량"></label><button data-audio-mute type="button" aria-pressed="false">소리 끄기</button><small data-audio-status>클릭·키 입력 후 BGM과 효과음 시작</small></div><a class="sound-credit" href="./credits.html" target="_blank" rel="noopener">음악·그래픽 출처 / 라이선스</a></div><div class="home-art"><canvas id="home-portrait" width="600" height="600" aria-hidden="true"></canvas><span class="eyebrow">20 BOSSES · ONE RUN</span></div></div>
+  </section>
+
+  <section id="screen-ranking" class="overlay ranking-screen" aria-labelledby="ranking-title" hidden>
+    <div class="ranking-panel"><span class="eyebrow gold">THE CHALLENGERS · TOP 100</span><h2 id="ranking-title" tabindex="-1">균열을 넘어선 기록</h2><p class="muted small">20보스 완주 기록 · 피격이 적은 순, 동률이면 보스당 평균 전투시간이 짧은 순.</p><p class="ranking-notice">합성 전투 v2 랭킹 · 이전 전투 기록과 별도 집계 · 브라우저 제출 기록이며 조작 검증은 없습니다. 계정 없이 완주마다 등록합니다.</p>
+      <p id="ranking-status" role="status" aria-live="polite"></p><div class="ranking-scroll" role="region" aria-labelledby="ranking-title" tabindex="0"><table class="ranking-table"><caption>전체 클리어 상위 100기록. 평균은 전체 전투시간을 20으로 나눈 값입니다.</caption><thead><tr><th scope="col">순위</th><th scope="col">닉네임</th><th scope="col">직업 / 무기</th><th scope="col" aria-sort="ascending">피격</th><th scope="col">보스당 평균</th><th scope="col">전체 전투</th></tr></thead><tbody id="ranking-rows"></tbody></table></div>
+      <p class="muted small ranking-rules">소개·정지·클리어·카드 선택 시간 제외. 보호막에 막힌 적 공격도 피격에 포함합니다.<br>자기장은 연속 노출당 1회. 같은 닉네임이 다른 사람일 수 있습니다.</p><div class="ranking-actions"><button id="ranking-refresh" type="button" class="practice-button">새로 불러오기</button><button id="ranking-back" type="button" class="text-button">메인으로 돌아가기</button></div>
+    </div>
+  </section>
+
+  <section id="screen-start" class="overlay start-screen" aria-labelledby="start-title" hidden>
+    <div class="start-shell">
+      <header class="masthead"><a class="wordmark" href="./" aria-label="균열의 투기장 시작 화면"><span class="sigil" aria-hidden="true">✧</span><span>RIFT<span class="wordmark-light"> / TWENTY</span></span></a><button id="selection-home" type="button" class="text-button">← 메인으로</button></header>
+      <div class="start-layout">
+        <div class="hero-column">
+          <div class="eyebrow gold">들어서는 순간, 물러설 곳은 없다</div>
+          <h1 id="start-title">균열의<br><em>투기장</em><span class="title-dot">.</span></h1>
+          <p class="intro-copy">잡몹도, 지름길도 없다.<br>당신의 무기. 열아홉 번의 선택. 마지막 보스.</p>
+          <div class="hero-art"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><span class="art-number" aria-hidden="true">I—XX</span><canvas id="hero-portrait" width="720" height="620" aria-label="선택한 도전자 모습"></canvas><div class="hero-caption"><span id="preview-class"></span><span id="preview-weapon"></span></div></div>
+          <div class="run-rules"><div><strong>20</strong><span>연속 보스</span></div><div><strong>25</strong><span>직업 고유 각인</span></div><div><strong>02</strong><span>고유 각인 한도 · 융합</span></div></div>
+        </div>
+        <div class="loadout-panel">
+          <div class="section-heading"><span class="eyebrow">01 / CHOOSE YOUR CHALLENGER</span><span class="tiny-diamond" aria-hidden="true">◇</span></div>
+          <h2>어떻게 싸울 것인가</h2>
+          <div id="class-choices" class="class-choices" role="group" aria-label="직업 선택"></div>
+          <div class="loadout-heading"><h3 id="selected-class-name"></h3><p id="selected-class-description"></p></div>
+          <div class="section-heading weapon-heading"><span class="eyebrow">02 / 주력 무기 · 속성</span><span id="choice-count"></span></div>
+          <div id="choices" class="choices" role="group" aria-label="주력 무기 또는 속성 선택"></div>
+          <div class="loadout-stats" aria-label="직업과 무기 능력치"><div><span>최대 생명력</span><strong id="stat-hp"></strong></div><div><span>적 피해 감소</span><strong id="stat-reduction"></strong></div><div><span>공격 피해</span><strong id="stat-damage"></strong></div><div><span>공격 재사용</span><strong id="stat-interval"></strong></div><div><span>사거리</span><strong id="stat-reach"></strong></div><div><span>회피 재사용</span><strong id="stat-dodge"></strong></div></div><p id="dodge-description" class="weapon-mechanics"></p><p id="selection-combo-tip" class="weapon-mechanics"></p><details class="selection-uniques"><summary>직업 고유 각인 5종 · 획득 효과와 대가</summary><ul id="selection-uniques-list"></ul></details><details class="selection-uniques"><summary>이 직업의 합성 10가지</summary><ul id="selection-fusions-list"></ul></details>
+          <p id="weapon-mechanics" class="weapon-mechanics"></p>
+          <div class="start-actions"><button id="start-button" type="button" class="primary start-cta"><span>투기장 입장</span><span aria-hidden="true">↗</span></button><button id="practice-button" type="button" class="practice-button">이 직업으로 연습</button></div>
+          <p class="run-note">보스 처치마다 카드 3장 중 1장 선택.<br>생명력은 이어지고, 죽으면 모든 각인이 사라집니다.</p>
+        </div>
+      </div>
+      <footer class="start-footer"><div class="key-guide"><span><kbd>WASD</kbd> 이동</span><span><kbd>마우스</kbd> 조준</span><span><kbd>좌클릭</kbd> 공격</span><span><kbd>SPACE / CTRL</kbd> 회피</span><span><kbd>Q</kbd> 반격 각인</span><span><kbd>ESC</kbd> 정지</span></div><label class="motion-option"><input id="start-motion" type="checkbox"> 화면 흔들림 줄이기</label></footer>
+    </div>
+  </section>
+
+  <section id="screen-briefing" class="overlay briefing-screen" aria-labelledby="briefing-boss-name" hidden>
+    <div class="briefing-panel">
+      <div class="briefing-art"><canvas id="briefing-portrait" width="360" height="360" role="img" aria-label="보스 초상화"></canvas></div>
+      <div class="briefing-copy">
+        <span id="briefing-stage" class="eyebrow gold"></span><p id="briefing-arena" class="arena-name"></p>
+        <h2 id="briefing-boss-name"></h2>
+        <p id="briefing-overview" class="briefing-overview"></p>
+        <div class="briefing-details"><section><h3>주요 패턴</h3><ul id="briefing-patterns"></ul></section><section><h3>대응 요령</h3><p id="briefing-hint"></p></section></div>
+        <section class="briefing-raid"><h3>대형 기믹 · <span id="briefing-raid-name"></span></h3><p id="briefing-raid-hint"></p><small id="briefing-raid-note">기믹 중 보스 피해 <span id="briefing-raid-mitigation">20%</span> 감소. 이동하며 공격하고, 마지막 타격 뒤 큰 틈을 노리세요.</small></section>
+        <div class="briefing-status"><strong id="briefing-health"></strong><span id="briefing-build"></span></div>
+        <button id="briefing-start" type="button" class="primary" aria-describedby="briefing-boss-name briefing-overview">결투 시작 <span aria-hidden="true">↗</span></button>
+        <button id="briefing-back" type="button" class="text-button" hidden>보상 선택으로 돌아가기</button>
+        <button id="briefing-menu" type="button" class="text-button">런 포기 · 직업 선택으로</button>
+        <p class="muted small">읽는 동안 전투와 폭풍은 멈춥니다. 준비되면 시작하세요.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-pause" class="overlay" aria-labelledby="pause-title" hidden>
+    <div class="panel pause-panel"><span class="eyebrow gold">TAKE A BREATH</span><h2 id="pause-title">결투는 잠시 멈춥니다.</h2><p id="pause-combat-help" class="muted">변형 콤보는 각 타격마다 공격 버튼을 새로 눌러야 합니다.<br>고유 각인 2개를 모으면 융합이 활성화되고 이후 고유 각인은 제안되지 않습니다.<br>점선은 최종 공격 범위. 내부가 100% 차오르면 발동합니다.<br>파란 화살표 범위는 탄 발사 예고, 실제 탄을 피하세요.<br>후속타는 다시 조준한 뒤 각각 충전됩니다.<br>대형 기믹은 안전 공간으로 이동하세요. 기믹 중 보스 피해 20% 감소.<br>기믹 중에도 이동하며 공격할 수 있습니다.</p><p id="pause-tutorial-help" class="muted" hidden></p><div id="pause-build" class="pause-build"></div><div class="audio-controls"><label>소리 <input data-audio-volume type="range" min="0" max="100" value="45" aria-label="전체 음량"></label><button data-audio-mute type="button" aria-pressed="false">소리 끄기</button><small>정지·다른 탭에서는 소리도 멈춥니다.</small></div><label class="motion-option"><input id="pause-motion" type="checkbox"> 화면 흔들림 줄이기</label><button id="resume-button" type="button" class="primary">계속 싸우기 <span>ESC ↗</span></button><button id="pause-menu" type="button" class="text-button">런 포기 · 직업 선택으로</button><small id="pause-note" class="muted">런을 포기하면 진행도와 카드가 초기화됩니다.</small></div>
+  </section>
+
+  <section id="screen-clear" class="overlay clear-screen" aria-labelledby="clear-title" hidden>
+    <div class="clear-panel"><span id="clear-stage" class="eyebrow gold"></span><span class="clear-mark" aria-hidden="true">✧</span><h2 id="clear-title" tabindex="-1">보스 격파</h2><p id="clear-boss"></p><p id="clear-health"></p><p class="muted small">잠시 후 보상을 선택합니다.</p></div>
+  </section>
+
+  <section id="screen-reward" class="overlay reward-screen" aria-labelledby="reward-title" hidden>
+    <div class="reward-shell"><span class="eyebrow gold" id="reward-stage"></span><h2 id="reward-title">승리는 당신을 바꾼다.</h2><p id="reward-description" class="muted"></p><div id="reward-choices" class="reward-choices" role="group" aria-label="보상 카드 3장 중 하나 선택"></div><div class="reward-footer"><span id="reward-health"></span><span id="reward-status" role="status" aria-live="polite">600ms 대기 후 선택 · <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></span></div><div class="next-boss"><span class="eyebrow">NEXT CHALLENGER</span><strong id="reward-next"></strong></div></div>
+  </section>
+
+  <section id="screen-practice-done" class="overlay" aria-labelledby="practice-done-title" hidden>
+    <div class="panel result-panel"><span class="eyebrow gold">PRACTICE COMPLETE</span><h2 id="practice-done-title">첫 연습, 잘 마쳤습니다.</h2><p class="muted">이동 · 공격 · 회피를 익혔습니다.<br>다른 직업도 연습하거나 실전에 도전하세요.</p><button id="practice-return" type="button" class="primary">직업 선택으로 돌아가기 <span>↗</span></button><p class="muted small">실전은 새 체력과 빈 각인으로 시작합니다.</p></div>
+  </section>
+
+  <section id="screen-dead" class="overlay" aria-labelledby="dead-title" hidden>
+    <div class="panel result-panel"><span class="result-mark death-mark" aria-hidden="true">Ⅹ</span><span class="eyebrow">THE RIFT REMEMBERS</span><h2 id="dead-title">끝이 아닌, 다음 시작.</h2><p id="dead-description" class="muted"></p><div id="dead-stats" class="result-stats"></div><p class="muted small">이번 런의 카드와 진행도는 초기화됩니다.</p><button id="dead-restart" type="button" class="primary">다시 도전하기 <span>↗</span></button></div>
+  </section>
+
+  <section id="screen-won" class="overlay" aria-labelledby="won-title" hidden>
+    <div class="panel result-panel victory-panel"><span class="result-mark" aria-hidden="true">✧</span><span class="eyebrow gold">ALL TWENTY. ONE CHAMPION.</span><h2 id="won-title">균열을 넘어선 자.</h2><p class="muted">스무 명의 수호자. 마지막 군주까지.<br>모든 결투에서 살아남았습니다.</p><div id="won-stats" class="result-stats"></div><form id="record-form" hidden><label for="record-nickname">완주 기록 등록 · 닉네임 2~16자</label><div class="record-controls"><input id="record-nickname" name="nickname" required minlength="2" maxlength="16" autocomplete="off" spellcheck="false" aria-describedby="record-notice record-status" placeholder="개인정보 없는 닉네임"><button id="record-submit" type="submit" class="primary">기록 공개 등록</button></div><p id="record-notice" class="ranking-notice">닉네임·직업·무기·기록이 공개됩니다. 상위 100기록을 보관합니다.<br>비공식 브라우저 제출 기록 · 조작 검증 없음</p><p id="record-status" role="status" aria-live="polite"></p></form><button id="won-restart" type="button" class="primary">새로운 빌드로 도전 <span>↗</span></button></div>
+  </section>
+
+  <script type="module" src="./src/boot.mjs"></script>
+</body>
+</html>

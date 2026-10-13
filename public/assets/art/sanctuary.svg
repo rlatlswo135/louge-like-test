@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1080" viewBox="0 0 1800 1080">
+  <defs>
+    <linearGradient id="night" x2="0" y2="1"><stop stop-color="#111b20"/><stop offset=".55" stop-color="#1f2527"/><stop offset="1" stop-color="#070b0d"/></linearGradient>
+    <linearGradient id="stone"><stop stop-color="#090e11"/><stop offset=".2" stop-color="#343c3b"/><stop offset=".35" stop-color="#51534a"/><stop offset=".46" stop-color="#272e2e"/><stop offset=".8" stop-color="#151c20"/><stop offset="1" stop-color="#090e12"/></linearGradient>
+    <linearGradient id="arch" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#687069"/><stop offset=".27" stop-color="#303c3d"/><stop offset=".75" stop-color="#192326"/><stop offset="1" stop-color="#060c10"/></linearGradient>
+    <linearGradient id="floor" x2="0" y2="1"><stop stop-color="#38423f"/><stop offset=".34" stop-color="#252e2d"/><stop offset="1" stop-color="#080e11"/></linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2=".2" y2="1"><stop stop-color="#b5ced3" stop-opacity=".17"/><stop offset="1" stop-color="#acc4d0" stop-opacity="0"/></linearGradient>
+    <radialGradient id="light"><stop stop-color="#ffe0a0" stop-opacity=".4"/><stop offset=".22" stop-color="#bb7339" stop-opacity=".16"/><stop offset="1" stop-color="#af5920" stop-opacity="0"/></radialGradient>
+    <radialGradient id="mist"><stop stop-color="#7f9898" stop-opacity=".2"/><stop offset="1" stop-color="#798b8e" stop-opacity="0"/></radialGradient>
+    <radialGradient id="vignette"><stop offset=".25" stop-color="#010509" stop-opacity="0"/><stop offset="1" stop-color="#010406" stop-opacity=".9"/></radialGradient>
+    <pattern id="masonry" width="154" height="126" patternUnits="userSpaceOnUse"><path d="M0 0H154V63H0ZM77 63H231V126H77ZM-77 63H77V126H-77Z" fill="none" stroke="#060d11" stroke-opacity=".38" stroke-width="3"/><path d="M2 3H152M79 66H229M-75 66H75" stroke="#96a096" stroke-opacity=".09"/></pattern>
+    <g id="column">
+      <path d="M-66 1050L-56 918 -46 196 -63 182 -68 151 68 151 63 182 46 196 56 918 66 1050Z" fill="url(#stone)" stroke="#101719" stroke-width="3"/>
+      <path d="M-37 929L-30 198M-12 931L-9 192M15 931L11 192M39 932L32 198" stroke="#8b9080" stroke-opacity=".23" stroke-width="3"/>
+      <path d="M-71 150L-81 124H81L71 150M-56 185H56M-66 936H66M-73 975H73M-80 1026H80" fill="none" stroke="#8a8875" stroke-opacity=".37" stroke-width="7"/>
+      <path d="M-81 1050V1028H81V1050M-74 124V109H74V124" fill="#232b2b" stroke="#060b0c" stroke-width="4"/>
+      <g fill="#747364" opacity=".55"><path d="M-53 129L-43 145 -33 129 -23 145 -13 129 -3 145 7 129 17 145 27 129 37 145 47 129 57 145 63 129Z"/></g>
+    </g>
+    <g id="vault">
+      <path d="M-322 955V386Q-322 132 0-76Q322 132 322 386V955H276V392Q276 173 0-16Q-276 173-276 392V955Z" fill="url(#arch)" stroke="#0a1419" stroke-width="8"/>
+      <path d="M-309 939V387Q-309 145 0-62Q309 145 309 387V939M-288 939V391Q-288 173 0-31Q288 173 288 391V939" fill="none" stroke="#869186" stroke-opacity=".22" stroke-width="3"/>
+      <path d="M-303 330L-277 337M-278 248L-249 263M-233 172L-210 195M-176 98L-154 124M-111 28L-89 56M303 330L277 337M278 248L249 263M233 172L210 195M176 98L154 124M111 28L89 56" stroke="#071216" stroke-width="4" opacity=".8"/>
+    </g>
+    <g id="candle"><path d="M-18 2H18L11 12H-11Z" fill="#6a5a42"/><path d="M-5 8H5V44H-5Z" fill="url(#stone)"/><path d="M0-26Q-12-7-3 0Q9 2 7-12Q2-9 0-26" fill="#eaba74"/><path d="M0-14Q-5-3 0 0Q5-2 0-14" fill="#fff1c9"/></g>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".62" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  </defs>
+  <path fill="url(#night)" d="M0 0H1800V1080H0Z"/>
+  <path fill="url(#masonry)" d="M0 0H1800V820H0Z"/>
+  <path d="M780 800V405Q780 214 1050 35Q1320 214 1320 405V800Z" fill="#080f15"/>
+  <path d="M854 761V410Q854 267 1050 113Q1246 267 1246 410V761Z" fill="#1b2930" stroke="#444e4c" stroke-width="5"/>
+  <path d="M885 712V417Q885 293 1050 164Q1215 293 1215 417V712Z" fill="#132129"/>
+  <path d="M939 710V410Q939 321 1050 233Q1161 321 1161 410V710Z" fill="#72837d" opacity=".14"/>
+  <g stroke="#131e24" stroke-width="15" fill="none"><path d="M1050 149V718M969 246V714M1131 246V714M858 416H1242M858 554H1242"/><circle cx="1050" cy="375" r="58"/></g>
+  <g stroke="#7e908b" stroke-opacity=".25" stroke-width="2" fill="none"><path d="M1044 149V718M963 246V714M1125 246V714M858 410H1242M858 548H1242"/><circle cx="1050" cy="375" r="67"/></g>
+  <path d="M0 824L781 728H1317L1800 839V1080H0Z" fill="url(#floor)"/>
+  <g fill="none" stroke="#090f12" stroke-width="3" opacity=".7"><path d="M970 732L254 1080M1018 732L699 1080M1082 732L1185 1080M1139 732L1667 1080M764 761L1408 770M599 804L1609 819M310 879L1800 909M0 1020L1800 1054"/></g>
+  <use href="#vault" transform="translate(1050 56) scale(.73 .76)"/>
+  <use href="#vault" transform="translate(1050 2) scale(1.06 1.02)"/>
+  <use href="#vault" transform="translate(1050 -115) scale(1.64 1.3)"/>
+  <path d="M0 0H500Q690 44 907 0M1800 0H1540Q1360 38 1178 0" fill="#070d10"/>
+  <use href="#column" transform="translate(686 9) scale(.6 .81)"/>
+  <use href="#column" transform="translate(1414 9) scale(.6 .81)"/>
+  <use href="#column" transform="translate(471 -12) scale(.88 1.02)"/>
+  <use href="#column" transform="translate(1615 -12) scale(.88 1.02)"/>
+  <use href="#column" transform="translate(80 -119) scale(1.5 1.2)"/>
+  <path d="M1024 169L915 158L427 1080H1278Z" fill="url(#beam)"/>
+  <path d="M1180 354L1128 276L953 947H1470Z" fill="url(#beam)" opacity=".55"/>
+  <ellipse cx="1005" cy="781" rx="482" ry="132" fill="url(#mist)"/>
+  <ellipse cx="764" cy="671" rx="144" ry="174" fill="url(#light)"/>
+  <ellipse cx="1328" cy="671" rx="144" ry="174" fill="url(#light)"/>
+  <use href="#candle" transform="translate(764 671) scale(.75)"/>
+  <use href="#candle" transform="translate(1328 671) scale(.75)"/>
+  <ellipse cx="251" cy="774" rx="180" ry="244" fill="url(#light)"/>
+  <use href="#candle" transform="translate(251 774) scale(1.1)"/>
+  <path d="M0 0H1800V1080H0Z" filter="url(#grain)" opacity=".032"/>
+  <path fill="url(#vignette)" d="M0 0H1800V1080H0Z"/>
+</svg>

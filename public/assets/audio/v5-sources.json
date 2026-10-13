@@ -1,0 +1,474 @@
+{
+  "revision": "recorded-combat-v5",
+  "sources": {
+    "kenney-impact": {
+      "author": "Kenney",
+      "title": "Impact Sounds",
+      "url": "https://kenney.nl/assets/impact-sounds",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "kenney-rpg": {
+      "author": "Kenney",
+      "title": "RPG Audio",
+      "url": "https://kenney.nl/assets/rpg-audio",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "rpg": {
+      "author": "rubberduck",
+      "title": "80 CC0 RPG SFX",
+      "url": "https://opengameart.org/content/80-cc0-rpg-sfx",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "water": {
+      "author": "rubberduck",
+      "title": "40 CC0 water / splash / slime SFX",
+      "url": "https://opengameart.org/content/40-cc0-water-splash-slime-sfx",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "guns": {
+      "author": "Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney",
+      "title": "The Free Firearm Sound Library",
+      "url": "https://opengameart.org/content/the-free-firearm-sound-library",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "bow": {
+      "author": "dorkster; original component recordings by qubodup",
+      "title": "Bow & Arrow Shot",
+      "url": "https://opengameart.org/content/bow-arrow-shot",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/"
+    },
+    "fantasy": {
+      "author": "North Fantasy Music",
+      "title": "Fantasy Music and Drum Loops Pack",
+      "url": "https://opengameart.org/content/fantasy-music-and-drum-loops-pack",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "heart": {
+      "author": "request",
+      "title": "Heartfelt Battle",
+      "url": "https://opengameart.org/content/heartfelt-battle-loopable-fantasy-stringspianohorn",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "battle": {
+      "author": "Wolfgang_ / Theodore Kerr",
+      "title": "Battle Theme",
+      "url": "https://opengameart.org/content/battle-theme-0",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    },
+    "hope": {
+      "author": "MintoDog",
+      "title": "Hope (Orchestral battle music)",
+      "url": "https://opengameart.org/content/hopeorchestral-battle-music",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/"
+    }
+  },
+  "files": [
+    {
+      "name": "sword-a",
+      "seconds": 0.29,
+      "onset": 0.002,
+      "kind": "sfx",
+      "file": "combat-v5/sword-a.wav",
+      "source": "rpg",
+      "original": "blade_01.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "d6343c9a9973c649f09ba61c983393f8cdbc7a2b5359ea2e16ade07718111fad"
+    },
+    {
+      "name": "sword-b",
+      "seconds": 0.31,
+      "onset": 0.0066,
+      "kind": "sfx",
+      "file": "combat-v5/sword-b.wav",
+      "source": "rpg",
+      "original": "blade_02.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "7485e6131ef3c24b1dd79c3740c144f2ec8c8ced7d29139ec071cef1a01796c0"
+    },
+    {
+      "name": "thrust",
+      "seconds": 0.2,
+      "onset": 0.0026,
+      "kind": "sfx",
+      "file": "combat-v5/thrust.wav",
+      "source": "rpg",
+      "original": "blade_03.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "d863ed2c60a181dcec1114005a83829453aeef77a9ffdca218e85d3e95b04386"
+    },
+    {
+      "name": "fire",
+      "seconds": 0.5,
+      "onset": 0.0643,
+      "kind": "sfx",
+      "file": "combat-v5/fire.wav",
+      "source": "rpg",
+      "original": "spell_fire_01.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "91f202107540bb0d6800bbca2d784d4a751a2841ed93841552e40c99bdec9033"
+    },
+    {
+      "name": "flame",
+      "seconds": 0.26,
+      "onset": 0.0315,
+      "kind": "sfx",
+      "file": "combat-v5/flame.wav",
+      "source": "rpg",
+      "original": "spell_fire_03.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "8312734d1cf5a628ae7a7b8cb2b841ee44f5dd369096369eb65e74e5a3f39600"
+    },
+    {
+      "name": "spark",
+      "seconds": 0.16,
+      "onset": 0.0736,
+      "kind": "sfx",
+      "file": "combat-v5/spark.wav",
+      "source": "rpg",
+      "original": "spell_fire_07.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "b4d273bf5a3e64c621218f25505539362daf6ec750f9a48643cb6aebd6bb1804"
+    },
+    {
+      "name": "arcane",
+      "seconds": 0.3,
+      "onset": 0.0188,
+      "kind": "sfx",
+      "file": "combat-v5/arcane.wav",
+      "source": "rpg",
+      "original": "spell_02.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "3f26229666b537c0b53b51705988410ed0a1fbc5d294da1e07bb729ae9efde73"
+    },
+    {
+      "name": "water-a",
+      "seconds": 0.24,
+      "onset": 0.0058,
+      "kind": "sfx",
+      "file": "combat-v5/water-a.wav",
+      "source": "water",
+      "original": "splash_09.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "deca220c9120470719aa807863519a5ae2ca229b024ba6b59e334edca64256e5"
+    },
+    {
+      "name": "water-b",
+      "seconds": 0.28,
+      "onset": 0.0078,
+      "kind": "sfx",
+      "file": "combat-v5/water-b.wav",
+      "source": "water",
+      "original": "splash_14.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "e593a2dc4bdb29b2e6d969faa3c5ef5cd54fe03a31b2867ce615913fe741db99"
+    },
+    {
+      "name": "water-burst",
+      "seconds": 0.6,
+      "onset": 0.0257,
+      "kind": "sfx",
+      "file": "combat-v5/water-burst.wav",
+      "source": "water",
+      "original": "splash_02.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "57fed11274493f56f665085f8c600234c00ef3058d7c78b7dea6a0048426e5bf"
+    },
+    {
+      "name": "stone",
+      "seconds": 0.55,
+      "onset": 0.0182,
+      "kind": "sfx",
+      "file": "combat-v5/stone.wav",
+      "source": "rpg",
+      "original": "stones_01.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "3d193353d9e8e233da2c50c68356f26675f0ff4ce49bed178039bb8a0a46aa72"
+    },
+    {
+      "name": "wood",
+      "seconds": 0.24,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/wood.wav",
+      "source": "kenney-impact",
+      "original": "impactWood_heavy_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "6fc2d832d75f682a134fe9c75d55b0e2a2d76d2d2f3fb393259c74463e1c170f"
+    },
+    {
+      "name": "metal",
+      "seconds": 0.21,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/metal.wav",
+      "source": "kenney-impact",
+      "original": "impactMetal_light_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "249f20386d31adce7c1ec70333d0a35524062c85ae303781e48b5fad46e9c70e"
+    },
+    {
+      "name": "punch-a",
+      "seconds": 0.18,
+      "onset": 0.0032,
+      "kind": "sfx",
+      "file": "combat-v5/punch-a.wav",
+      "source": "kenney-impact",
+      "original": "impactPunch_medium_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "83bdba368a4e5ffd6cb41bf167e739abed254dfd4870001a891d10537a421553"
+    },
+    {
+      "name": "punch-b",
+      "seconds": 0.18,
+      "onset": 0.0025,
+      "kind": "sfx",
+      "file": "combat-v5/punch-b.wav",
+      "source": "kenney-impact",
+      "original": "impactPunch_medium_001.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "ad4dc9f9113a1b5c6b6fad29f0df46a4c60d09e7285fe250e433516902089746"
+    },
+    {
+      "name": "kick",
+      "seconds": 0.26,
+      "onset": 0.0175,
+      "kind": "sfx",
+      "file": "combat-v5/kick.wav",
+      "source": "kenney-impact",
+      "original": "impactPunch_heavy_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "71d4d707c53fd229456f38a2154d5ea85c9599369d04e619ea91f76eed62a6f2"
+    },
+    {
+      "name": "guard",
+      "seconds": 0.36,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/guard.wav",
+      "source": "kenney-impact",
+      "original": "impactPlate_heavy_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "a35f20c1dcd9eb735998f2de092c00bf548d8773cc8515835a0fc6199f8ca627"
+    },
+    {
+      "name": "glass",
+      "seconds": 0.25,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/glass.wav",
+      "source": "kenney-impact",
+      "original": "impactGlass_medium_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "a6fa462aaf0f7b4de733fa7665dd631f447d6e42c16f9233117b498a00611bad"
+    },
+    {
+      "name": "bell",
+      "seconds": 0.65,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/bell.wav",
+      "source": "kenney-impact",
+      "original": "impactBell_heavy_000.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "f3ee8985f13db17bf1542b07881dd3a4873af22f49772795d896dcc4a78632d3"
+    },
+    {
+      "name": "revolver",
+      "seconds": 0.3,
+      "onset": 0.6701,
+      "kind": "sfx",
+      "file": "combat-v5/revolver.wav",
+      "source": "guns",
+      "original": "V_22P.wav",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "ba4395922f568fae91722393cfc8015d5579dd527113e25dd73d71872852c0c6"
+    },
+    {
+      "name": "rifle",
+      "seconds": 0.55,
+      "onset": 1.0308,
+      "kind": "sfx",
+      "file": "combat-v5/rifle.wav",
+      "source": "guns",
+      "original": "M_21P.wav",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "9fef8b7b3899a3cb02cd404b9594148aab80979edee02434ebe79b2a2a0b2bc1"
+    },
+    {
+      "name": "shotgun",
+      "seconds": 0.46,
+      "onset": 0.7834,
+      "kind": "sfx",
+      "file": "combat-v5/shotgun.wav",
+      "source": "guns",
+      "original": "N_26P.wav",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "81a72864b2e6ee5586b567856b9f710dd37796383bd390745bc262dceb8fd2f4"
+    },
+    {
+      "name": "machinegun",
+      "seconds": 0.115,
+      "onset": 0.2664,
+      "kind": "sfx",
+      "file": "combat-v5/machinegun.wav",
+      "source": "guns",
+      "original": "C_27P.wav",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "690a950fe0bfbcccf3d979c5971e3b1e86dd6d3151d2ea9c06a85d215bcd3f94"
+    },
+    {
+      "name": "pistol",
+      "seconds": 0.22,
+      "onset": 1.5393,
+      "kind": "sfx",
+      "file": "combat-v5/pistol.wav",
+      "source": "guns",
+      "original": "A_34P.wav",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "e1109442c1f6fa6abbc5e390ce8abdf61a26fa39cfebdb018e5a2ff7d824f44e"
+    },
+    {
+      "name": "bow",
+      "seconds": 0.24,
+      "onset": 0,
+      "kind": "sfx",
+      "file": "combat-v5/bow.wav",
+      "source": "bow",
+      "original": "bow.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon. Bow derivative remains CC BY-SA 3.0.",
+      "sha256": "ce97770cf25cd05d8077de4b233a62b5d19f7362b342fc36ac6d01eeffa98623"
+    },
+    {
+      "name": "cloth2",
+      "seconds": 0.17,
+      "onset": 0.072,
+      "kind": "sfx",
+      "file": "combat-v5/cloth2.wav",
+      "source": "kenney-rpg",
+      "original": "cloth2.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "beb9f1b7d0c9590d8de1e4a1e97e2cae394f869ad5bb60c43fbc855208019436"
+    },
+    {
+      "name": "cloth4",
+      "seconds": 0.23,
+      "onset": 0.025,
+      "kind": "sfx",
+      "file": "combat-v5/cloth4.wav",
+      "source": "kenney-rpg",
+      "original": "cloth4.ogg",
+      "changes": "Attack-onset crop with 3 ms pre-roll; DC removal, peak/RMS normalization, short fades, 22050 Hz stereo PCM16 WAV. Playback level/rate vary per weapon.",
+      "sha256": "9fc65551f21c331935983a1896cec8622b743070db560a2dccbe9e717cdec928"
+    },
+    {
+      "name": "menu",
+      "source": "fantasy",
+      "seconds": 64,
+      "kind": "music",
+      "file": "score-v5/menu.m4a",
+      "original": "Nightwatch.wav",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "05ed55d2fc6eae9bbe911a096cefb21979d1fc6d1aa7cb7c94a097e9786b3691"
+    },
+    {
+      "name": "iron",
+      "source": "battle",
+      "seconds": 116.11428571428571,
+      "kind": "music",
+      "file": "score-v5/iron.m4a",
+      "original": "Battle.mp3",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "957fea1dba75f60fcb25b2a5d164012a5438478a9cce520c3bf07b11daa8a5ef"
+    },
+    {
+      "name": "drums",
+      "source": "fantasy",
+      "seconds": 60,
+      "kind": "music",
+      "file": "score-v5/drums.m4a",
+      "original": "Dark Times_Drumbeat_Loop.wav",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "2d8f39655843fbf59adeec144f8f6de7224c3eed357b55afa62dbadc3d943da6"
+    },
+    {
+      "name": "ember",
+      "source": "fantasy",
+      "seconds": 72.5,
+      "kind": "music",
+      "file": "score-v5/ember.m4a",
+      "original": "Sacred_Guardians.wav",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "49e92b5039209f4df4de93e18dd6e0a8109df50ad8bb516d34adf07bebe39b04"
+    },
+    {
+      "name": "frost",
+      "source": "heart",
+      "seconds": 153.59709750566893,
+      "kind": "music",
+      "file": "score-v5/frost.m4a",
+      "original": "heartfelt-battle_loop.ogg",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "1fa97f0a16a3fe65fb791498812f2556aeebf46724f580973139cbd14929ef50"
+    },
+    {
+      "name": "storm",
+      "source": "fantasy",
+      "seconds": 72,
+      "kind": "music",
+      "file": "score-v5/storm.m4a",
+      "original": "Storm_Incoming.wav",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "c9cd01930854eff1131f49d5ed783c7126aea90fa7d9ffe015acb581e19301c2"
+    },
+    {
+      "name": "abyss",
+      "source": "fantasy",
+      "seconds": 72,
+      "kind": "music",
+      "file": "score-v5/abyss.m4a",
+      "original": "Dark_and_Mysterious.wav",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "0fd99b768fdee5831503c498321c79540b1e9d01e907ffdbc39e86ed677cbc9c"
+    },
+    {
+      "name": "final",
+      "source": "hope",
+      "seconds": 69.81659863945578,
+      "kind": "music",
+      "file": "score-v5/final.m4a",
+      "original": "hope_orchestral_battle_music_bpm165_0.ogg",
+      "changes": "Original pitch and complete composition; level normalization, short edge fades, 22050 Hz stereo AAC encoding.",
+      "sha256": "dcabaa7846849d7fbf81e02858feb1f89d4d908a839c51461104bfa69922afeb"
+    },
+    {
+      "name": "victory",
+      "seconds": 1.2,
+      "source": "heart",
+      "kind": "stinger",
+      "file": "score-v5/victory.wav",
+      "original": "heartfelt-battle_outro.ogg",
+      "changes": "Opening chord excerpt; exponential release and fade to silence; PCM16 WAV without encoder padding.",
+      "sha256": "160440b6f1f035245f719df7deb165c29d1fa73516371f5e8e32c5aa09e4edf2"
+    },
+    {
+      "name": "finale",
+      "seconds": 2.6,
+      "source": "heart",
+      "kind": "stinger",
+      "file": "score-v5/finale.wav",
+      "original": "heartfelt-battle_outro.ogg",
+      "changes": "Opening chord excerpt; exponential release and fade to silence; PCM16 WAV without encoder padding.",
+      "sha256": "2a8c847ab06b6e2904b707d487e6c0a5b927373415caf60f7bb4cd4af213fb2d"
+    }
+  ]
+}

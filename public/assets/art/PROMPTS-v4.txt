@@ -1,0 +1,74 @@
+Hero animation atlas — OpenAI built-in imagegen, 2026-10-13.
+Weapon atlas — OpenAI built-in imagegen, weapon-atlas-v4.png.
+
+Weapon prompt:
+Use case: stylized-concept. Asset type: a practical transparent 2D weapon sprite atlas for a realistic painted dark fantasy boss-rush game.
+Create ONE sheet with EXACTLY 5 equal columns by 4 equal rows, twenty weapons. REAL transparent alpha background, no backdrop, no ground, no shadows, no grid, no labels. Every weapon is a clean isolated full object in its cell, at least 12% transparent margin on every edge. Never cross cell borders. Use realistic painted metal, leather, wood grain, engraving and subtle edge lighting. No thick black outlines or flat vector fills. Crisp detail suitable for a 40-pixel-wide runtime sprite AND a 180-pixel inventory portrait. The art should match realistic medieval armored characters on stone arenas.
+ORIENTATION: all weapons are SIDE VIEW, horizontal, handle / butt on the LEFT and sharp tip / barrel / magical head pointing RIGHT. Level firing axis, no isometric diagonal rotation. Bow only is vertical with convex limbs curving to the RIGHT, central leather grip, tips at top and bottom; bow must be UNSTRUNG and WITHOUT an arrow, as the game adds animated string and arrow.
+Exact row order left to right:
+Row 1: a worn elegant steel longsword with leather grip and restrained brass guard; a long ash-wood spear with engraved steel leaf head; a heavy single-bit dark steel battle axe on a wooden haft; an elegant unstrung wooden recurve bow; a rugged wood-and-steel mechanical crossbow with steel limbs and no bolt.
+Row 2: a short fire scepter with a dark carved wood shaft, bronze claw holding a glowing ember-red crystal at the RIGHT tip; a water scepter with dark wood, aged silver claw and a faceted pale cyan aquamarine tip; a lightning scepter with aged wood, gold coil and clear violet quartz tip; a compact antique fantasy six-shot revolver, dark steel with worn brown grip; a long ornate fantasy sniper rifle with wood stock and small brass scope.
+Row 3: a broad two-handed greatsword with weathered steel fuller and dark leather grip; a narrow single dagger with aged silver blade; an asymmetric sharp steel boomerang oriented with its longest point toward the RIGHT; a plain iron-shod monk battle staff horizontal; a heavy fantasy double-barrel shotgun with weathered wood stock.
+Row 4: a short heavy handheld iron cannon with a large open muzzle on the RIGHT and bronze fittings; a rugged early mechanical machine gun with iron receiver, wooden grip and a visible belt/box magazine; two small matching antique pistols parallel and horizontally aligned, both barrels pointing RIGHT; a compact fantasy flamethrower with copper pipes, small underslung pressure tank and dark steel nozzle on the RIGHT; a single rugged armored fist gauntlet viewed side-on, fingers curled and knuckles facing RIGHT.
+No hands or people holding weapons. No modern plastic or tactical rails. No bright flat pictogram shapes, no UI ornaments. Magic crystals have only restrained internal glow with a tight silhouette, no large effect clouds. Complete objects all inside their own cells.
+
+Boss windup atlas — OpenAI built-in imagegen edit of boss-atlas-v3.png.
+
+Boss windup prompt:
+Use case: identity-preserve. Asset type: a second animation pose for the attached 20-boss game sprite atlas.
+The attached image is the EDIT TARGET. Preserve all twenty exact character identities, costumes, textures, palettes, scale, camera and their 5 columns x 4 rows order. Create ONE matching transparent sheet of these SAME twenty bosses in clear anticipatory attack poses. This is one windup animation frame per boss, not new characters. Keep each boss inside its original cell with clean gutters. Fixed orthographic three-quarter view. Full feet, all limbs and weapons visible, no crop. The foot baseline and body size must match each corresponding existing sprite as closely as possible. Real alpha transparency across the entire empty space, remove all tinted backgrounds, no text or labels, no grid or ground.
+Row 1:
+1 Black armored sword warden raises the sword beside his right shoulder, knees braced, about to make a heavy slash.
+2 Horned shaggy beast lowers his head, horns forward, forearms planted, visibly crouched before charging.
+3 Lava hammer golem brings the hammer up and back with bent elbows, core hot.
+4 Ice spear knight holds his two ice lances raised in a defensive cross, mantle lifted.
+5 Lightning orbital machine turns its metal rings to a narrow diagonal and draws the small spheres inward, ready to discharge.
+Row 2:
+6 Tracked siege cannon tilts its barrel upward slightly, grounded body recoils back, no smoke.
+7 Hooded twin-blade wraith pulls both blades up behind the shoulders, cloak fans wide.
+8 Tentacled hooded shaman raises his staff overhead and spreads the empty hand.
+9 Crimson executioner lifts his huge axe with both hands ready for a downward strike.
+10 Purple crowned rift sorcerer raises both empty palms and opens his cape.
+Row 3:
+11 Mirror duelist bends one knee and coils sword arm backward, blade raised at shoulder, for a thrust.
+12 Moss queen lifts both branch-like arms and hanging lantern, roots stretch.
+13 Solar demon folds his arms inward before releasing a burst, solar ring intact.
+14 Golden clockwork king winds his long spear horizontally across the body.
+15 Coiled blue leviathan rears its head up with open jaws, coils tense.
+Row 4:
+16 Red winged comet knight raises his burning sword to shoulder height, both wings swept back.
+17 Pale oracle raises hands and brings three tablets into a tight arc above shoulders.
+18 Blue lightning stone colossus raises both massive fists high above his shoulders, elbows bent.
+19 Black moth matriarch lifts and partly folds her wings into a tall narrow V.
+20 Crimson-caped golden-crown emperor raises the sword diagonally beside the crown, off hand clenched, cloak lifted.
+No broad VFX clouds, circles, lines, muzzle flashes, ground effects or additional objects. Only the individual boss silhouettes and their subtle existing glow. Do not create a new background. Preserve realistic painted dark fantasy rendering.
+
+Selected output: hero-atlas-v4.png. Original output retained in generated_images.
+
+Initial generation prompt:
+Use case: stylized-concept.
+Asset type: production animation sprite atlas for a small top-down dark-fantasy PC action boss-rush game.
+Create a SINGLE TRANSPARENT sprite sheet, EXACTLY 7 equal columns by 5 equal rows (35 full-body sprites), clean regular grid, no grid lines, no text. Consistent fixed orthographic three-quarter view, looking toward screen right and slightly toward viewer, elevated camera 25 degrees. All characters adult human proportions, not chibi. Painterly realistic 3D-rendered armor and cloth with high quality pale rim lighting, rich material shading, sharp readable silhouettes against dark stone arenas. Detail should read at 76 pixels tall. Boots touch the same baseline at 90% height in EVERY cell; same camera, same scale, same centered torso position in all frames within a row. At least 10% transparent gutter around each character, no overlap or cropping.
+Five rows, top to bottom:
+1. Warrior: closed iron helmet, fitted worn silver plate armor, muted blue surcoat, leather belt, rugged boots; disciplined arena knight.
+2. Archer: forest-green hood, dark leather coat with short split cape, tan arm wraps, light greaves; lean ranger.
+3. Mage: deep desaturated violet hooded robes, fitted waist, pale silver clasps, exposed gloved hands, split robe with visible boots; mysterious battlemage.
+4. Gunslinger: broad weathered hat, dark brown long split leather coat, brass buckles, charcoal trousers, heavy boots; stern fantasy mercenary.
+5. Fighter: short dark hair, muted russet sleeveless martial armor, wrapped fists, dark cropped trousers, greaves, athletic adult; arena martial artist.
+Every row depicts the SAME hero with identical costume and proportions in seven animation poses, columns left to right:
+1. Resting combat guard, slightly bent knees, EMPTY front hand extended at chest level to the right to hold a separate runtime weapon.
+2. Walk passing pose, left leg forward, natural modest arm movement, hand kept near chest.
+3. Walk opposite passing pose, right leg forward, same body height.
+4. Charging / braced attack windup: planted feet, torso leaned back slightly, front empty hand pulled in to shoulder, other hand assisting.
+5. Attack follow-through: feet braced, torso leaning right, empty front fist reaching right at chest level, weight transfers right.
+6. Evasive crouch: low athletic forward dodge pose, full body compressed, one leg tucked, other extended, head lower.
+7. Recovery guard for first four rows. In fighter row ONLY, a clear side kick to the right with one leg fully extended and other leg bearing weight.
+Characters are UNARMED in all cells: no swords, bows, staves, firearms, knives or carried weapons, as weapons are drawn separately by the game. No magic effects or glow clouds, no ground shadows, no platforms, no backdrop, no checkerboard painted into image. Real alpha transparency. Keep anatomy coherent, elbows and knees connected, no duplicate limbs. Strongly avoid toy-like blocky proportions, flat vector illustration, thick black outlines, cartoon heads. This is a practical animation sheet, not a concept presentation.
+
+Targeted correction prompt applied to the initial generated image:
+Use case: precise-object-edit. Edit this transparent 7-column, 5-row animation sprite sheet. Preserve the canvas dimensions, alpha transparency, exact grid, row baselines, scale, lighting and every unmentioned character/frame.
+Fix these specific errors ONLY:
+1. Row 1 column 6 currently shows a green ranger crouching. Replace ONLY this cell with the correct SILVER ARMORED BLUE-SURCOAT WARRIOR from row 1 in a low athletic evasive crouch; use his closed silver helmet and blue cloth, not a green hood.
+2. Row 5 column 6 is EMPTY. Add the correct bare-armed russet-clothed FIGHTER from row 5 in a low dodge crouch, his head and arms lowered, front leg bent, other leg extended, no weapons. Feet must share the baseline of the other row-5 sprites.
+3. Column 3 in EVERY row currently repeats the column-2 walk pose. Change ONLY the legs in column 3 into the opposite passing stride: the currently back leg is forward and the currently forward leg is back. Keep torso and costume unchanged.
+Do not change any other pose, do not move or add rows or columns. No background, grid, text or shadows. Real transparent alpha.

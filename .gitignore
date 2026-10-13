@@ -1,0 +1,6 @@
+node_modules/
+public/src/
+.pi/
+data/
+.DS_Store
+*.log

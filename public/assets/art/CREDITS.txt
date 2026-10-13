@@ -1,0 +1,33 @@
+Current animated characters and painted weapons — 2026-10-13 follow-up
+
+weapon-atlas-v4.png: twenty painted weapon cutouts, nineteen used for base and transformed held weapons; the gauntlet reference is retained unused. Bow string / arrow and muzzle flashes remain code-drawn. The narrow boomerang gutter is clipped at draw time to exclude the adjacent dagger tip.
+
+weapon-atlas-v4.png SHA-256: 66029e552c692b70f74d2b1ff0d8fff3dd505b37bb6d42f4a0eb769c45ee6a96
+
+hero-atlas-v4.png: five classes, seven poses per row (idle, opposite walking steps, charge, attack, dodge, recovery or kick). boss-windup-v4.png: twenty corresponding attack anticipation poses, edited from boss-atlas-v3.png. Generated with OpenAI built-in imagegen for this project; prompts and targeted correction are in PROMPTS-v4.txt. Decoded/cropped once at startup; combat only draws sprites. This is a small pose atlas, not a full skeletal animation set.
+
+hero-atlas-v4.png SHA-256: a39ebd0f3a6f588a3a224e5c18c2a01c4d92777bc75ddad9875f205c111d595e
+boss-windup-v4.png SHA-256: 18b64b7ea0c3f0ca73ca03969d7303b6543b232c6951e83035f9c786a92ea30c
+
+Current original generated artwork — 2026-10-13
+
+Created for RIFT / TWENTY with OpenAI imagegen, no third-party game imagery used as a reference. arena-atlas-v3.png contains four base environments; the game adds twenty stage-specific floor motifs. arena-gate-v3.png is menu key art. boss-atlas-v3.png contains twenty distinct boss cutouts with alpha, animated by Canvas transforms. Prompt record: PROMPTS-v3.txt.
+
+arena-atlas-v3.png SHA-256: 52a22849551aaf00aa6f6d0bc1fb63905fcfd3a0da365d86187bcc854b8b0eaf
+arena-gate-v3.png SHA-256: 5c8ab84992d87c82d6a3c10f8e1bcc531f764c80bd8e9717129d7307cd1b742d
+boss-atlas-v3.png SHA-256: c97918533e9f5534298799bdd4e0b5a9c94000f8a0cfabc1d3866438e27e5893
+
+Retained earlier source material and original vector fallback:
+
+Monastery Stone Floor
+Creator: Amal Kumar / Poly Haven
+Asset: https://polyhaven.com/a/monastery_stone_floor
+Source: https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/monastery_stone_floor/monastery_stone_floor_diff_1k.jpg
+License: CC0 1.0 Universal (public domain dedication)
+https://creativecommons.org/publicdomain/zero/1.0/
+Official terms: https://polyhaven.com/license
+File: monastery-stone.jpg — original 1K diffuse JPEG, unmodified.
+SHA-256: 8e52ec982469ce9da312cefe3126c1dff05b7150234971bc6dff6e31c3c584ae
+The game tiles, desaturates and lights this material in Canvas; only display is modified.
+
+sanctuary.svg, hero/boss illustrations and arena ornament are original artwork authored for RIFT / TWENTY. No artwork from World of Warcraft, Lost Ark, Dark Souls or Dark and Darker is included.

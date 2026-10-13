@@ -1,0 +1,139 @@
+Current runtime audio — recorded combat v5 (2026-10-13)
+
+All weapon attacks/impacts use edited recordings; no noise/oscillator weapon synthesizer.
+Music: eight independent source pieces at original pitch; no reuse of Ominous/Volatile Reaction arrangements.
+Victory: 1.2 seconds; finale: 2.6 seconds. Full provenance and exact edits: v5-sources.json.
+Offline recipe: scripts/build-audio-v5.mjs.
+
+Impact Sounds — Kenney
+https://kenney.nl/assets/impact-sounds
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+RPG Audio — Kenney
+https://kenney.nl/assets/rpg-audio
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+80 CC0 RPG SFX — rubberduck
+https://opengameart.org/content/80-cc0-rpg-sfx
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+40 CC0 water / splash / slime SFX — rubberduck
+https://opengameart.org/content/40-cc0-water-splash-slime-sfx
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+The Free Firearm Sound Library — Ben Jaszczak, Brian Nelson, Kevin Heras, Matthew Nanney
+https://opengameart.org/content/the-free-firearm-sound-library
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+Bow & Arrow Shot — dorkster; original component recordings by qubodup
+https://opengameart.org/content/bow-arrow-shot
+CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/
+
+Fantasy Music and Drum Loops Pack — North Fantasy Music
+https://opengameart.org/content/fantasy-music-and-drum-loops-pack
+CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+
+Heartfelt Battle — request
+https://opengameart.org/content/heartfelt-battle-loopable-fantasy-stringspianohorn
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+Battle Theme — Wolfgang_ / Theodore Kerr
+https://opengameart.org/content/battle-theme-0
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+Hope (Orchestral battle music) — MintoDog
+https://opengameart.org/content/hopeorchestral-battle-music
+CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
+
+Sound files: excerpts, normalization, edge fades, PCM conversion; runtime level/rate variation. Bow derivative uses CC BY-SA 3.0.
+Music: complete pieces, normalization, edge fades, AAC. Stingers: outro excerpts with exponential release. No endorsement implied.
+
+combat-v5/sword-a.wav (blade_01.ogg) SHA-256: d6343c9a9973c649f09ba61c983393f8cdbc7a2b5359ea2e16ade07718111fad
+combat-v5/sword-b.wav (blade_02.ogg) SHA-256: 7485e6131ef3c24b1dd79c3740c144f2ec8c8ced7d29139ec071cef1a01796c0
+combat-v5/thrust.wav (blade_03.ogg) SHA-256: d863ed2c60a181dcec1114005a83829453aeef77a9ffdca218e85d3e95b04386
+combat-v5/fire.wav (spell_fire_01.ogg) SHA-256: 91f202107540bb0d6800bbca2d784d4a751a2841ed93841552e40c99bdec9033
+combat-v5/flame.wav (spell_fire_03.ogg) SHA-256: 8312734d1cf5a628ae7a7b8cb2b841ee44f5dd369096369eb65e74e5a3f39600
+combat-v5/spark.wav (spell_fire_07.ogg) SHA-256: b4d273bf5a3e64c621218f25505539362daf6ec750f9a48643cb6aebd6bb1804
+combat-v5/arcane.wav (spell_02.ogg) SHA-256: 3f26229666b537c0b53b51705988410ed0a1fbc5d294da1e07bb729ae9efde73
+combat-v5/water-a.wav (splash_09.ogg) SHA-256: deca220c9120470719aa807863519a5ae2ca229b024ba6b59e334edca64256e5
+combat-v5/water-b.wav (splash_14.ogg) SHA-256: e593a2dc4bdb29b2e6d969faa3c5ef5cd54fe03a31b2867ce615913fe741db99
+combat-v5/water-burst.wav (splash_02.ogg) SHA-256: 57fed11274493f56f665085f8c600234c00ef3058d7c78b7dea6a0048426e5bf
+combat-v5/stone.wav (stones_01.ogg) SHA-256: 3d193353d9e8e233da2c50c68356f26675f0ff4ce49bed178039bb8a0a46aa72
+combat-v5/wood.wav (impactWood_heavy_000.ogg) SHA-256: 6fc2d832d75f682a134fe9c75d55b0e2a2d76d2d2f3fb393259c74463e1c170f
+combat-v5/metal.wav (impactMetal_light_000.ogg) SHA-256: 249f20386d31adce7c1ec70333d0a35524062c85ae303781e48b5fad46e9c70e
+combat-v5/punch-a.wav (impactPunch_medium_000.ogg) SHA-256: 83bdba368a4e5ffd6cb41bf167e739abed254dfd4870001a891d10537a421553
+combat-v5/punch-b.wav (impactPunch_medium_001.ogg) SHA-256: ad4dc9f9113a1b5c6b6fad29f0df46a4c60d09e7285fe250e433516902089746
+combat-v5/kick.wav (impactPunch_heavy_000.ogg) SHA-256: 71d4d707c53fd229456f38a2154d5ea85c9599369d04e619ea91f76eed62a6f2
+combat-v5/guard.wav (impactPlate_heavy_000.ogg) SHA-256: a35f20c1dcd9eb735998f2de092c00bf548d8773cc8515835a0fc6199f8ca627
+combat-v5/glass.wav (impactGlass_medium_000.ogg) SHA-256: a6fa462aaf0f7b4de733fa7665dd631f447d6e42c16f9233117b498a00611bad
+combat-v5/bell.wav (impactBell_heavy_000.ogg) SHA-256: f3ee8985f13db17bf1542b07881dd3a4873af22f49772795d896dcc4a78632d3
+combat-v5/revolver.wav (V_22P.wav) SHA-256: ba4395922f568fae91722393cfc8015d5579dd527113e25dd73d71872852c0c6
+combat-v5/rifle.wav (M_21P.wav) SHA-256: 9fef8b7b3899a3cb02cd404b9594148aab80979edee02434ebe79b2a2a0b2bc1
+combat-v5/shotgun.wav (N_26P.wav) SHA-256: 81a72864b2e6ee5586b567856b9f710dd37796383bd390745bc262dceb8fd2f4
+combat-v5/machinegun.wav (C_27P.wav) SHA-256: 690a950fe0bfbcccf3d979c5971e3b1e86dd6d3151d2ea9c06a85d215bcd3f94
+combat-v5/pistol.wav (A_34P.wav) SHA-256: e1109442c1f6fa6abbc5e390ce8abdf61a26fa39cfebdb018e5a2ff7d824f44e
+combat-v5/bow.wav (bow.ogg) SHA-256: ce97770cf25cd05d8077de4b233a62b5d19f7362b342fc36ac6d01eeffa98623
+combat-v5/cloth2.wav (cloth2.ogg) SHA-256: beb9f1b7d0c9590d8de1e4a1e97e2cae394f869ad5bb60c43fbc855208019436
+combat-v5/cloth4.wav (cloth4.ogg) SHA-256: 9fc65551f21c331935983a1896cec8622b743070db560a2dccbe9e717cdec928
+score-v5/menu.m4a (Nightwatch.wav) SHA-256: 05ed55d2fc6eae9bbe911a096cefb21979d1fc6d1aa7cb7c94a097e9786b3691
+score-v5/iron.m4a (Battle.mp3) SHA-256: 957fea1dba75f60fcb25b2a5d164012a5438478a9cce520c3bf07b11daa8a5ef
+score-v5/drums.m4a (Dark Times_Drumbeat_Loop.wav) SHA-256: 2d8f39655843fbf59adeec144f8f6de7224c3eed357b55afa62dbadc3d943da6
+score-v5/ember.m4a (Sacred_Guardians.wav) SHA-256: 49e92b5039209f4df4de93e18dd6e0a8109df50ad8bb516d34adf07bebe39b04
+score-v5/frost.m4a (heartfelt-battle_loop.ogg) SHA-256: 1fa97f0a16a3fe65fb791498812f2556aeebf46724f580973139cbd14929ef50
+score-v5/storm.m4a (Storm_Incoming.wav) SHA-256: c9cd01930854eff1131f49d5ed783c7126aea90fa7d9ffe015acb581e19301c2
+score-v5/abyss.m4a (Dark_and_Mysterious.wav) SHA-256: 0fd99b768fdee5831503c498321c79540b1e9d01e907ffdbc39e86ed677cbc9c
+score-v5/final.m4a (hope_orchestral_battle_music_bpm165_0.ogg) SHA-256: dcabaa7846849d7fbf81e02858feb1f89d4d908a839c51461104bfa69922afeb
+score-v5/victory.wav (heartfelt-battle_outro.ogg) SHA-256: 160440b6f1f035245f719df7deb165c29d1fa73516371f5e8e32c5aa09e4edf2
+score-v5/finale.wav (heartfelt-battle_outro.ogg) SHA-256: 2a8c847ab06b6e2904b707d487e6c0a5b927373415caf60f7bb4cd4af213fb2d
+
+
+Archived sources / previous arrangements retained in the project (not current music):
+
+Current runtime audio — phrase revision (2026-10-13 follow-up)
+
+arena/menu, iron, drums, ember, frost, storm, abyss, final.m4a: Offline sampled arrangements derived from Ominous and Volatile Reaction by Kevin MacLeod (incompetech.com), CC BY 4.0. The source recordings use 34–48s continuous phrases, excerpted, resampled, filtered, layered with sparse seven-beat percussion, crossfaded at the loop boundary, normalized and AAC encoded. They replace the previous 240ms string-grain loops. These are project arrangements, not the original unmodified tracks or third-party endorsements. Attribution and original URLs follow below.
+arena/victory.m4a (1.45s) and arena/finale.m4a (2.8s): short recorded brass stingers derived from Fanfare for Space by Kevin MacLeod, CC BY 4.0. Source offset 4.8s in the retained clear excerpt (51.8s in the original recording), with 0.52s / 1.65s held phrase, exponential release, short stereo reflections, normalization and AAC encoding. Build recipe: scripts/build-arena-audio.mjs.
+
+foley/*.ogg: Kenney RPG Audio, CC0 1.0 Universal. Official source: https://kenney.nl/assets/rpg-audio . Included original license: foley/LICENSE.txt. Original recordings copied unchanged, playback rate and level adjusted at runtime. Mapping: roll=cloth1, dash=cloth3, blade=knifeSlice, impact=metalPot1, cast=drawKnife2.
+
+arena/abyss.m4a SHA-256: c954a34bef081a7f44607a07a02984b8ae2f9fc41ff5fa058c1f6ced85cb9b18
+arena/drums.m4a SHA-256: f483f43fb1cfa97bd1831f6a4f2588a5dbfd72699d0e6a4bca9bbd3187dfb23e
+arena/ember.m4a SHA-256: 51ecd4c66ac030556dee97bbc66be89c8b89f84f0ae3d72ce1e65b8fbbd14c45
+arena/final.m4a SHA-256: db4633c91cf022d3a47b6d1afb97316b6115b3288fa237941c79be7bb626568c
+arena/finale.m4a SHA-256: 2a9f6da0038526eaadedc38cb6628e10b8451e699ba4c30b81caf7f672e5b561
+arena/frost.m4a SHA-256: 97126a2af5ac0df43a944d0ad05b04e20e8153fdca19052cd9ee3b0b9d2f61f2
+arena/iron.m4a SHA-256: 8f0b66653f046a1eff2201198105bb7abadfe3a0ea11bbb517d39aa6965b7c61
+arena/menu.m4a SHA-256: 3cfdc66185bdcbb9ec4cea595ebb3818163f5726c8d56d2d122f52cf8c90cab0
+arena/storm.m4a SHA-256: a18f0366e2339912f7b437f56b864f3294a254aa1ed4b4a7729596ab7dffc455
+arena/victory.m4a SHA-256: 5ca4e02716bb7c062335cb88aaa855ba43f64fbca15bd959aabec22eb2ecec75
+foley/LICENSE.txt SHA-256: 5735dfd72cb64cbbceda4ebc00c380c41ca680edb82ff153aa7c9ab97614c539
+foley/blade.ogg SHA-256: 4cd96dc630bed9840c15f1dd2306da2cc56a4da26a5d3f1a03c5a7265ac5e54f
+foley/cast.ogg SHA-256: d5df6a4130cbb016f97b4883769a418917b9629cb4c21717030b186e0c73281a
+foley/dash.ogg SHA-256: a48632d17a4f1416541d261a32a31612e01267144c407fa3ecab3ff410f0085b
+foley/impact.ogg SHA-256: 159def979e8e386c2c539f5e99cc30a080eb2dcb6c911fa2e4ccc0785b2522fd
+foley/roll.ogg SHA-256: ddb93a3671233f95da0e0b10367f082f7eb42fa6caaddcf776410aa8833c747d
+
+Original source recordings / retained legacy victory excerpts (legacy excerpts are no longer played):
+
+Audio credits
+
+All tracks by Kevin MacLeod (incompetech.com), licensed under Creative Commons Attribution 4.0 International (CC BY 4.0): https://creativecommons.org/licenses/by/4.0/
+Official license terms: https://incompetech.com/music/royalty-free/licenses/
+
+- "Ominous" — menu ambience; ISRC USUAN1100562. Official record: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100562
+  Official source: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Ominous.mp3
+  Official description/feel: "Uneven foreboding short cue, winds play opposite strings." Dark, Mysterious, Somber, Unnerving.
+  SHA-256 (included MP3): 718b6ceabe372bab89a60dcbe336bc9b291d2db262b9eb77f9a50946d7326c35
+- "Volatile Reaction" — battle loop; ISRC USUAN1400039. Official record: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1400039
+  Official source: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Volatile%20Reaction.mp3
+  Official description/feel: brass and percussion; Action, Aggressive, Dark, Intense.
+  SHA-256 (included MP3): ced1148df201a6c69062a96b7ef49c49924572ca5023c2ac5a2d6c5828ecb218
+- "Fanfare for Space" — victorious clear/final cues; ISRC USUAN1300026. Official record: https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1300026
+  Official source: https://incompetech.com/music/royalty-free/mp3-royaltyfree/Fanfare%20for%20Space.mp3
+  Official description: brass, strings, percussion; "Epic, Uplifting".
+  Modified excerpts from the orchestral climax, not the subdued introduction: clear uses 47.0–57.0s (10s); final uses 40.0–58.0s (18s).
+  Decoded with macOS afconvert, trimmed as PCM, 12ms fade-in/200ms fade-out, encoded as AAC in M4A. The player also applies a short gain envelope.
+  SHA-256 clear M4A: c1ab9936965a128a980dd43ea69babca7f670e51cc8126e18da193f480e1ac82
+  SHA-256 final M4A: 3e151886c7ba1a635c06a461c96a76da0cdcb5007628c169393b536947b16edc
+
+Required attribution: "Ominous", "Volatile Reaction", and "Fanfare for Space" Kevin MacLeod (incompetech.com), licensed under Creative Commons: By Attribution 4.0. https://creativecommons.org/licenses/by/4.0/

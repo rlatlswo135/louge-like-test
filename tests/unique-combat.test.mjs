@@ -1,0 +1,7 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {createRun,createInput,getStats,step,cancelPlayerActions} from '../public/src/game.mjs';
+
+test('fresh input, not held repeat, advances twin-strike combo',()=>{const s=createRun({classId:'warrior'});s.cards['twin-strike']=1;const i=createInput();i.attack=true;step(s,i);assert.equal(s.player.comboStep,1);for(let n=0;n<26;n++)step(s,i);assert.equal(s.player.comboStep,1);i.attack=false;step(s,i);i.attack=true;step(s,i);assert.equal(s.player.comboStep,2);});
+test('archer assassin exposes dagger and second dash; class stats remain direct-card-safe',()=>{const s=createRun({classId:'archer'});s.cards.assassin=1;const stats=getStats(s);assert.equal(stats.weapon.id,'dagger');assert.equal(stats.dodge.extraDashes,2);s.cards.longbow=1;assert.equal(getStats(s).uniqueIds.length,2);});
+test('cancel prevents charged/held attacks carrying across suspension',()=>{const s=createRun({classId:'mage'});s.cards['beam-mage']=1;s.player.charge=.5;s.player.attackHeld=true;cancelPlayerActions(s);assert.equal(s.player.charge,0);assert.equal(s.player.attackHeld,false);assert.equal(s.attacks.length,0);});
+test('shotgun+cannon fusion launches one bounded shell profile',()=>{const s=createRun({classId:'gunslinger'});s.cards.shotgun=s.cards.cannon=1;const w=getStats(s).weapon;assert.equal(w.id,'fragment-shell');assert.ok(w.damage<92);});
