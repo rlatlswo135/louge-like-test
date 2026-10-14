@@ -23,4 +23,4 @@ stage('천둥의 주조소', 1, 'anvil', 'storm', 'lightning'),
 stage('검은 달의 신전', 3, 'moon', 'abyss', 'void'),
 stage('균열 황제의 투기장', 0, 'crown', 'final', 'void'),
 ]);
-export const stageTheme = (state: RunState | null) => STAGES[state?.tutorial ? 0 : state?.stage || 0] || STAGES[0];
+export const stageTheme = (state: RunState | null) => state?.olympus && state.boss.def.arena || STAGES[state?.tutorial ? 0 : state?.stage || 0] || STAGES[0];

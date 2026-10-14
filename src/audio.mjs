@@ -2,23 +2,23 @@ import { getStats, getStorm } from './game.mjs';
 import { stageTheme } from './stages.mjs';
 
 export const WEAPON_SOUNDS = Object.freeze({
-  sword:{swing:['sword-a','sword-b'],hit:['metal'],gain:.65},
-  spear:{swing:['thrust'],hit:['metal'],rate:1.08,gain:.58},
+  sword:{swing:['sword-a','sword-b'],hit:['punch-b','punch-a'],gain:.65,hitRate:.88},
+  spear:{swing:['thrust'],hit:['punch-a'],rate:1.08,gain:.58,hitRate:1.08},
   axe:{swing:['sword-b'],hit:['wood','kick'],rate:.75,gain:.8},
   bow:{swing:['bow'],hit:['wood'],gain:.6},
-  crossbow:{swing:['bow'],hit:['metal'],rate:1.24,gain:.72},
+  crossbow:{swing:['bow'],hit:['wood'],rate:1.24,gain:.72},
   fire:{swing:['fire'],hit:['flame'],gain:.66},water:{swing:['water-a','water-b'],hit:['water-b'],gain:.67},
   lightning:{swing:['spark'],hit:['glass'],gain:.5,rate:1.15},
-  revolver:{swing:['revolver'],hit:['metal'],gain:.62},sniper:{swing:['rifle'],hit:['metal'],gain:.82},
+  revolver:{swing:['revolver'],hit:['punch-a'],gain:.62},sniper:{swing:['rifle'],hit:['kick'],gain:.82},
   punch:{swing:['cloth2'],hit:['punch-a','punch-b'],gain:.85},kick:{swing:['cloth4'],hit:['kick'],gain:.9},
-  boomerang:{swing:['sword-a'],hit:['metal'],rate:1.32,gain:.48},dagger:{swing:['thrust'],hit:['punch-a'],rate:1.24,gain:.5},
+  boomerang:{swing:['sword-a'],hit:['wood'],rate:1.32,gain:.48},dagger:{swing:['thrust'],hit:['punch-a'],rate:1.24,gain:.5},
   'battle-staff':{swing:['cloth4'],hit:['wood'],gain:.68},beam:{swing:['arcane'],hit:['spark'],rate:1.2,gain:.26},
-  meteor:{swing:['arcane'],hit:['stone'],rate:.8,gain:.42},shotgun:{swing:['shotgun'],hit:['metal'],gain:.78},
+  meteor:{swing:['arcane'],hit:['stone'],rate:.8,gain:.42},shotgun:{swing:['shotgun'],hit:['kick'],gain:.78},
   cannon:{swing:['shotgun'],hit:['stone'],rate:.65,gain:.88},'fragment-shell':{swing:['shotgun'],hit:['glass'],rate:.8,gain:.74},
-  machinegun:{swing:['machinegun'],hit:['metal'],gain:.36},'dual-pistols':{swing:['pistol'],hit:['metal'],gain:.52},
+  machinegun:{swing:['machinegun'],hit:['punch-a'],gain:.36},'dual-pistols':{swing:['pistol'],hit:['punch-b'],gain:.52},
   flamethrower:{swing:['flame'],hit:['fire'],gain:.29},
 });
-export const COMBAT_SAMPLES=Object.freeze(['sword-a','sword-b','thrust','fire','flame','spark','arcane','water-a','water-b','water-burst','stone','wood','metal','punch-a','punch-b','kick','guard','glass','bell','revolver','rifle','shotgun','machinegun','pistol','bow','cloth2','cloth4']);
+export const COMBAT_SAMPLES=Object.freeze(['sword-a','sword-b','thrust','fire','flame','spark','arcane','water-a','water-b','water-burst','stone','wood','metal','punch-a','punch-b','kick','guard','glass','bell','revolver','rifle','shotgun','machinegun','pistol','bow','cloth2','cloth4','chain']);
 export const MUSIC = Object.freeze(Object.fromEntries([
   ...['menu','iron','drums','ember','frost','storm','abyss','final'].map(name=>[name,[`score-v5/${name}.m4a`,true]]),
   ...['victory','finale'].map(name=>[name,[`score-v5/${name}.wav`,false]]),
@@ -129,7 +129,8 @@ export function createAudio(win) {
     const profile=WEAPON_SOUNDS[id]||WEAPON_SOUNDS.sword;
     const names=hit?profile.hit:profile.swing,name=names[soundSerial++%names.length];
     const level=(hit?.45:profile.gain)*(event.secondary?.45:1),rate=(profile.rate||1)*(1+(soundSerial%3-1)*.018);
-    sample(name,level,hit?1:rate);
+    sample(name,level,hit?(profile.hitRate||1):rate);
+    if(!hit&&['sword','spear','axe','dagger','boomerang'].includes(id))sample(id==='axe'?'cloth4':'cloth2',.16,profile.rate||1);
     if(!hit&&event.charged&&event.power>=.95)sample('arcane',.2,.72);
     if(!hit&&event.elastic)sample('cloth4',.22,.8);
     if(!hit&&id==='crossbow')sample('metal',.12,1.4);
@@ -197,7 +198,19 @@ export function createAudio(win) {
         else if(event.type==='bossHit'&&event.damage>0&&permitted('impact',.06))impact(event.weaponId||weaponId,true,event);
         else if(event.type==='dodge'&&permitted('dodge',.07))sample(event.kind==='blink'?'arcane':event.kind==='roll'?'roll':'dash',.6,event.kind==='blink'?1.2:1);
         else if(event.type==='bossMove'&&permitted('boss-move',.15))sample('arcane',.4,.8);
+        else if(event.type==='olympusIntroEnd'){sample('bell',.38,.64);sample('stone',.48,.7);}
+        else if(event.type==='olympusSleep'){sample('cloth4',.42,.7);sample('bell',.15,.6);}
+        else if(event.type==='olympusChain')sample('chain',.8,.72);
+        else if(event.type==='olympusPickup')sample('stone',.3,1.45);
+        else if(event.type==='olympusSmash'){sample('stone',.95,.65);sample('glass',.5,.8);}
+        else if(event.type==='olympusWipe'){sample('stone',.75,.55);sample('bell',.3,.55);}
+        else if(event.type==='olympusEnrage')sample('kick',.65,.7);
         else if(event.type==='bossAttack'&&permitted('boss-attack',.12)){
+          if(event.bossId==='aergia'){
+            const sounds={debris:['cloth2',.6,1.35],sweep:['cloth4',.75,.8],punish:['cloth4',.75,.85],charge:['cloth4',.65,.65],chains:['chain',.9,.8],cross:['stone',.85,.72],rubble:['stone',.5,1.1],slam:['stone',1,.65],rebuke:['stone',1,.6]};
+            if(event.kind==='rebuke'||event.kind==='slam')sample('glass',.4,.65);
+            const cue=sounds[event.kind]||['cloth4',.55,.8];sample(...cue);continue;
+          }
           const family=stageTheme(run).sound;
           const material={steel:'sword-b',glass:'glass',ice:'glass',void:'arcane',lightning:'spark',water:'water-burst',fire:'fire',stone:'stone',cannon:'shotgun',flesh:'kick'}[family]||'guard';
           sample(material,event.heavy?.78:.57,event.heavy?.8:1);

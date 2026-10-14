@@ -12,6 +12,7 @@ import { cancelPlayerActions } from './systems/player.mjs';
 import { createRng } from './random.mjs';
 import { spawnHazard } from './systems/effects.mjs';
 import { hitBoss } from './systems/combat.mjs';
+import { encounterFor } from './olympus-encounters.mjs';
 import type { RunState, RunOptions, InputState, Weapon, Hazard, Attack, Particle, CombatStats } from './types.mjs';
 /** One run owns its entities and delegates simulation to stateless systems. */
 export class GameRun implements RunState {
@@ -42,6 +43,7 @@ export class GameRun implements RunState {
   declare attackSerial?: number;
   declare tutorial?: RunState['tutorial'];
   declare encounter?: RunState['encounter'];
+  declare olympus?: RunState['olympus'];
   private static readonly players = new PlayerSystem();
   private static readonly bosses = new BossSystem();
   private static readonly combat = new CombatSystem();
@@ -65,6 +67,11 @@ export class GameRun implements RunState {
   step(input: InputState, dt = STEP): this {
     const state = this;
     if (state.status !== 'playing') return state;
+    const olympusEncounter=encounterFor(state);
+    if(olympusEncounter&&state.olympus.phase==='intro'){
+      olympusEncounter.entrance.update(state,input,dt);
+      return state;
+    }
     const startingPhase=state.boss.phase;
     GameRun.bosses.advancePhase(state);
     state.time += dt;
@@ -89,7 +96,7 @@ export class GameRun implements RunState {
       if(!state.boss.burnTime)state.boss.burnDps=0;
     }
     const encounterBefore=state.encounter;
-    if(startingPhase===state.boss.phase&&!state.boss.raid&&!state.boss.combo&&(state.boss.state==='idle'||state.encounter?.active))updateSpecialEncounter(state, dt, {
+    if(!olympusEncounter&&startingPhase===state.boss.phase&&!state.boss.raid&&!state.boss.combo&&(state.boss.state==='idle'||state.encounter?.active))updateSpecialEncounter(state, dt, {
       spawnHazard:(h: Hazard)=>spawnHazard(state, h), spawnProjectile:(q: Attack)=>{
         if(state.projectiles.length>=LIMITS.projectiles)throw new Error('Encounter projectile limit exceeded');state.projectiles.push({...q, prevX:q.x, prevY:q.y, maxLife:q.life, color:'#a4f1e0'});state.encounter.shot=state.projectiles.at(-1);
       }
@@ -100,9 +107,15 @@ export class GameRun implements RunState {
       state.projectiles=state.projectiles.filter(q=>q.owner==='player'||q.encounterBit);
       state.events.push({type:'encounter', kind:state.encounter.kind});
     }
-    GameRun.players.update(state, input, dt);
+    olympusEncounter?.update(state,input,dt);
+    const locked=state.olympus?.controlsLocked;
+    const playerInput=locked ? {...input,up:false,down:false,left:false,right:false,attack:false,attackPressed:false,dodge:false,counter:false}
+      : state.olympus?.carrying || state.olympus?.phase==='stunned'&&state.olympus.smashHeld ? {...input,attack:false,attackPressed:false} : input;
+    GameRun.players.update(state, playerInput, dt);
+    if(playerInput!==input){input.attackPressed=false;input.dodge=false;input.counter=false;}
+    olympusEncounter?.clampActors(state);
     GameRun.combat.update(state, dt);
-    if (startingPhase===state.boss.phase && state.boss.hp > 0 && !state.encounter?.active) GameRun.bosses.update(state, dt);
+    if (!olympusEncounter && startingPhase===state.boss.phase && state.boss.hp > 0 && !state.encounter?.active) GameRun.bosses.update(state, dt);
     GameRun.world.update(state, dt);
     GameRun.bosses.advancePhase(state);
     // 동시 사망/처치는 사망을 우선한다.

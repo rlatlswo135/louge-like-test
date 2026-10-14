@@ -4,6 +4,7 @@ import { burst, impactText, spawnHazard, spawnParticle } from '../systems/effect
 import { getTutorialStep } from '../tutorial.mjs';
 import { clampToArena, hazardHitsCircle, segmentHitsCircle } from '../systems/geometry.mjs';
 import { getStats } from '../systems/stats.mjs';
+import { encounterFor } from '../olympus-encounters.mjs';
 import type { RunState, Weapon, Attack, AttackOptions, CombatStats } from '../types.mjs';
 /** 공격·투사체 수명과 명중 */
 export class CombatSystem {
@@ -168,8 +169,9 @@ export function attackDamage(state: RunState, base: number, attack: Attack) {
 }
 export function hitBoss(state: RunState, damage: number, color: string, attack?: Attack) {
   if(state.tutorial)state.tutorial.attacked=true;
-  const floor=state.tutorial&&getTutorialStep(state)<3?1:encounterDamageFloor(state);
+  const floor=encounterFor(state)?.mechanic.damageFloor(state) ?? (state.tutorial&&getTutorialStep(state)<3?1:encounterDamageFloor(state));
   const dealt = Math.min(Math.max(0, state.boss.hp-floor), damage * (state.boss.raid ? RAID_DAMAGE_MULTIPLIER : 1));
+  if(state.olympus&&dealt<=0)return;
   state.boss.hp -= dealt;
   state.boss.hitFlash = .12;
   state.feedback.impact = 1;
