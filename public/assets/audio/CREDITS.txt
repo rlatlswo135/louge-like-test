@@ -48,6 +48,9 @@ CC0 1.0: https://creativecommons.org/publicdomain/zero/1.0/
 Sound files: excerpts, normalization, edge fades, PCM conversion; runtime level/rate variation. Bow derivative uses CC BY-SA 3.0.
 Music: complete pieces, normalization, edge fades, AAC. Stingers: outro excerpts with exponential release. No endorsement implied.
 
+combat-v5/chain.wav: chain_01.ogg from rubberduck's 80 CC0 RPG SFX (CC0 1.0), full 0.506333-second recording converted to 48kHz stereo PCM16 with macOS afconvert; runtime gain/rate only. Used for chain release and pulling, not a generic metal impact.
+combat-v5/chain.wav SHA-256: a550e78ad056c5db92a05073383e324073defd16d82123a245262043102b2ffc
+
 combat-v5/sword-a.wav (blade_01.ogg) SHA-256: d6343c9a9973c649f09ba61c983393f8cdbc7a2b5359ea2e16ade07718111fad
 combat-v5/sword-b.wav (blade_02.ogg) SHA-256: 7485e6131ef3c24b1dd79c3740c144f2ec8c8ced7d29139ec071cef1a01796c0
 combat-v5/thrust.wav (blade_03.ogg) SHA-256: d863ed2c60a181dcec1114005a83829453aeef77a9ffdca218e85d3e95b04386

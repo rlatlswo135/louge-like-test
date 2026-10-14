@@ -221,6 +221,7 @@ export interface HitGroup {
   countered?: boolean
 }
 export interface Hazard extends Partial<Point> {
+  visual?: string;
   shape?: string;
   phase?: string;
   pattern?: string;
@@ -413,6 +414,7 @@ export interface EncounterState {
     time: number}[];
 }
 export interface RunState {
+  olympus?: import('./olympus-types.mjs').OlympusState;
   time: number;
   stageTime: number;
   stormExposure: number;

@@ -23,7 +23,7 @@ export class WorldSystem {
       h.t += dt;
       if (h.phase === 'warn' && getHazardProgress(h) === 1) {
         h.phase = 'active';
-        state.events.push({type:'bossAttack', shape:h.projectile?'projectile':h.shape, heavy:!!h.raid, bossId:state.boss.def.id});
+        state.events.push({type:'bossAttack', shape:h.projectile?'projectile':h.shape, heavy:!!h.raid, bossId:state.boss.def.id, kind:h.visual});
         spawnParticle(state, { ...h, type: 'bossImpact', shape: h.projectile ? 'muzzle' : h.shape,
           vx: 0, vy: 0, life: .32, maxLife: .32, color: state.boss.def.color });
         if (h.projectile) {
@@ -101,7 +101,7 @@ export class WorldSystem {
 }
 export function getStorm(state: RunState) {
   const startsAt = STORM.delay + STORM.warning;
-  const stageTime = state.tutorial ? 0 : state.stageTime;
+  const stageTime = state.tutorial || state.olympus ? 0 : state.stageTime;
   const active = stageTime >= startsAt;
   const progress = Math.max(0, Math.min(1, (stageTime - startsAt) / STORM.duration));
   const radius = STORM.radius + (STORM.minRadius - STORM.radius) * progress;

@@ -74,6 +74,16 @@
   },
   "files": [
     {
+      "name": "chain",
+      "seconds": 0.506333,
+      "kind": "sfx",
+      "file": "combat-v5/chain.wav",
+      "source": "rpg",
+      "original": "chain_01.ogg",
+      "changes": "Full recording; afconvert -f WAVE -d LEI16 to 48000 Hz stereo PCM16. Runtime gain/rate on chain release and pull.",
+      "sha256": "a550e78ad056c5db92a05073383e324073defd16d82123a245262043102b2ffc"
+    },
+    {
       "name": "sword-a",
       "seconds": 0.29,
       "onset": 0.002,

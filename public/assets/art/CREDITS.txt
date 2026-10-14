@@ -1,3 +1,29 @@
+Olympus / Aergia deep-charcoal revision — 2026-10-14
+
+Current boss: aergia-atlas-v4.png. Offline recolor of the retained v2 atlas, with the same marble-prop replacement as v3. Deeper charcoal-blue cloth, ashen skin, near-black burgundy and cold iron. Mean palette luminance about 50% of v2 (29% darker than v3); silhouettes and alpha retained. No new image generation or third-party art. Rebuild: node scripts/build-aergia-art.mjs (ImageMagick offline; no runtime filters/readback). Temple remains v2; projectile remains temple-shard-v1.png.
+aergia-atlas-v4.png SHA-256: 38a5c441a867395b4ba2997e1a4f270e7a0448c894144341ff745c419b7b11a2
+
+Olympus / Aergia charcoal revision — 2026-10-14 (retained)
+
+Previous boss: aergia-atlas-v3.png. Offline edit of the project's v2 atlas: charcoal-blue cloth, ash skin, dark burgundy sash and cold iron; palette luminance about 70% of v2. The raised apple is replaced with an angular marble chip sampled from olympus-warrior-v1.png. Original poses and alpha remain except at the replaced prop. No new image generation or third-party art. Its offline recipe has since been updated to produce v4. Temple remains v2.
+aergia-atlas-v3.png SHA-256: 44de7ee8f5e041bd4520bde2dcd538db441a731238565c70ad56d7566d655eb1
+The same isolated, alpha-masked marble chip is temple-shard-v1.png, used for the four projectile heads. It contains no hand or carried-bundle silhouette.
+temple-shard-v1.png SHA-256: bdc737ffab15f0429b08e08ca90e0583c96a45516ded3a0309335545ec2ccf9d
+
+Olympus / Aergia dark revision — 2026-10-14
+
+Temple and retained boss source: aergia-temple-v2.png, aergia-atlas-v2.png. OpenAI built-in image_gen.imagegen edits of the project's v1 originals. Dark moonlit sanctuary, desaturated god, repaired throwing hand and cell gutters. Runtime checks/crops isolate the raised-fist row from the apple windup frame. The v1 images remain as source references. Prompt record: PROMPTS-olympus-v2.txt.
+aergia-temple-v2.png SHA-256: 90e11791c5cc8f5c57ae0a55329ef3b4aad8bafa344459bf7316f9aa9c00517e
+aergia-atlas-v2.png SHA-256: eff25abced544c7d5ed75da3be61d0b43e8efa033c86ba817e80a352ad1f676a
+
+Olympus / Aergia original artwork — 2026-10-14
+
+aergia-temple-v1.png, aergia-atlas-v1.png, olympus-warrior-v1.png: generated for this project with OpenAI built-in image_gen.imagegen. No third-party game images used as references. The boss and warrior each have sixteen painted poses, assembled with Canvas transforms; these are pose atlases, not full skeletal animation. The temple uses original Greek fantasy imagery. Painted rubble is cropped at runtime from the warrior's carried marble bundle. Prompts and final asset paths: PROMPTS-olympus-v1.txt.
+
+aergia-temple-v1.png SHA-256: 42bc804e6990af7d636c9475289a854aedee47b2cf86bf1290eec691140051a4
+aergia-atlas-v1.png SHA-256: f8d517fdfd86387d14eca667699ee665da875d3136be4b4d1b9f1a4ff86550c3
+olympus-warrior-v1.png SHA-256: 90037556941145ad8c31c5ab1bce58f59020ef5f42940bc0cdc97541c08f0715
+
 Current animated characters and painted weapons — 2026-10-13 follow-up
 
 weapon-atlas-v4.png: twenty painted weapon cutouts, nineteen used for base and transformed held weapons; the gauntlet reference is retained unused. Bow string / arrow and muzzle flashes remain code-drawn. The narrow boomerang gutter is clipped at draw time to exclude the adjacent dagger tip.

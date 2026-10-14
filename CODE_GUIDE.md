@@ -1,5 +1,28 @@
 # 코드 구조와 OOP 브리핑
 
+## 올림푸스 보스 확장 구조
+
+`/01`의 아에르기아는 기존 `Boss` 엔티티와 `GameRun` 전투 시스템을 사용하면서, 보스 행동을 아래 조합으로 확장한다.
+
+```text
+BossEncounter
+└─ AergiaEncounter
+   ├─ entrance: AergiaEntrance extends BossEntrance
+   ├─ attacks:  AergiaAttacks  extends BossAttackSet
+   └─ mechanic: AergiaSlumber extends OncePerFightMechanic
+```
+
+- [`src/boss-encounter.mts`](src/boss-encounter.mts): 구성 요소의 계약, 기믹 1회 발동, 행동 실행 순서. 기믹 진행 중에는 일반 패턴을 중단한다.
+- [`src/aergia.mts`](src/aergia.mts): 아에르기아의 정의·시작 상태·일반 패턴·수면 기믹·등장 타이밍. `AERGIA_RULES`에서 체력·반피 발동 조건·파편 수·기절 시간·수집 제한 16초·휘두르기 범위 330·분노 속도 1.3배를 조정한다. 파편 내려찍기는 피해 없이 기절만 주고, 수집 실패는 전멸 분기로 간다.
+- [`src/olympus-types.mts`](src/olympus-types.mts): 현재 아에르기아에 필요한 런 상태. 다음 보스의 상태 종류가 생기면 보스 번호로 구분하는 타입으로 확장한다.
+- [`src/olympus-encounters.mts`](src/olympus-encounters.mts): 구현된 보스 등록. [`src/olympus.mts`](src/olympus.mts): 등록된 보스의 `createState()`를 호출해 테스트 런과 프리셋을 만든다.
+- [`src/olympus-render.mjs`](src/olympus-render.mjs): 포즈 선택·카메라·검 잔상·사슬·파편. 렌더는 게임 상태와 난수를 변경하지 않는다. 마우스 좌표는 줌과 화면 여백을 역변환한다.
+- [`src/olympus-main.mjs`](src/olympus-main.mjs): 개별 라우트·로딩·입력·정지·HUD·음원. [`public/olympus.html`](public/olympus.html) / [`public/olympus.css`](public/olympus.css)가 화면 구성이다.
+
+상속은 보스 정체성과 행동 계약에 사용하고, 일반 패턴·기믹·등장은 서로 포함 관계로 구성했다. 일반 패턴을 등장 연출의 부모 클래스로 만들지 않으므로 다음 보스에서 한 요소만 바꾸거나 공통 행동을 재사용하기 쉽다. 구성 요소 인스턴스는 행동만 제공하고 가변 상태는 `GameRun.olympus`에 있으므로 재도전이 이전 기믹 상태를 물려받지 않는다.
+
+다음 보스는 먼저 사용자의 메모에 맞는 컴포넌트와 런 상태를 구현하고 등록한다. 그 후 `olympus-catalog.mts`의 해당 `ready`를 켠다. 아직 메모가 없는 `/02`~`/50`은 준비 중 화면이며 기존 보스 행동을 대신 연결하지 않는다.
+
 ## 코드는 어디에 있나
 
 **수정할 원본은 `src/`다.** 기존 `public/src/game.mjs`에 모여 있던 전투 코드를 TypeScript 모델과 시스템으로 분리했다. `public/src/`는 `npm run build`가 만드는 브라우저용 출력이라 직접 수정하지 않는다.

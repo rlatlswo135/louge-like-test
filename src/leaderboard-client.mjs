@@ -1,6 +1,6 @@
 import { CAMPAIGN, CLASSES } from './content.mjs';
 
-export const isFullClear=run=>Boolean(run&&!run.tutorial&&run.status==='won'&&run.stage===CAMPAIGN.stages.length-1&&run.bossesCleared===CAMPAIGN.stages.length);
+export const isFullClear=run=>Boolean(run&&!run.tutorial&&!run.olympus&&run.status==='won'&&run.stage===CAMPAIGN.stages.length-1&&run.bossesCleared===CAMPAIGN.stages.length);
 
 export function buildRecord(run,nickname,id) {
   if(!isFullClear(run))throw new Error('20보스를 모두 클리어한 실전 기록만 등록할 수 있습니다.');

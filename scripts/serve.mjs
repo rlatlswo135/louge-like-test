@@ -65,7 +65,9 @@ export function createHandler({ root = PUBLIC_DIR, routes = {}, leaderboard, leg
         const r = await routes[rawPath]();
         return send(200, r.body, r.type);
       }
-      const file = await resolvePublicFile(root, rawPath);
+      // Only the explicit Olympus routes use the new entry point; unknown paths stay 404.
+      const olympus = /^\/(?:0[1-9]|[1-4][0-9]|50|gods)\/?$/.test(rawPath);
+      const file = await resolvePublicFile(root, olympus ? '/olympus.html' : rawPath);
       if (!file) return send(404, 'Not Found');
       const body = await readFile(file);
       return send(200, body, TYPES[path.extname(file)] || 'application/octet-stream');

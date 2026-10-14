@@ -5,6 +5,8 @@ import { cancelPlayerActions, createInput, createRun, getStats, step } from '../
 import { CLASSES } from '../public/src/content.mjs';
 import { CLASS_UNIQUES, FUSIONS } from '../public/src/builds.mjs';
 import { STAGES } from '../public/src/stages.mjs';
+import { createOlympusRun } from '../public/src/olympus.mjs';
+import { encounterFor } from '../public/src/olympus-encounters.mjs';
 
 // Web Audio and timer boundaries only; game and audio controller stay real.
 const settle = () => new Promise(resolve => setImmediate(resolve));
@@ -48,6 +50,59 @@ test('audio unlock loads music after gesture; mute/focus/pause stop every source
     assert.ok(h.sources().every(n => n.disconnected), 'even future scheduled notes must not replay');
     assert.ok(h.nodes.filter(n => n.kind === 'filter').every(n => n.disconnected), 'effect filters disconnect too');
   }
+});
+
+test('weapon-specific swings remain distinct and flesh impacts avoid the metallic pan hit',async()=>{
+  const h=host(),audio=createAudio(h.win),run=createRun();audio.setScene('battle',run);await audio.unlock();await settle();
+  for(const [weaponId,expected] of [['sword','sword-'],['bow','bow.wav'],['revolver','revolver.wav']]){
+    h.win.contexts[0].currentTime+=1;const before=h.sources().length;
+    audio.play([{type:'swing',weaponId}],run);
+    assert.ok(h.sources().slice(before).some(s=>s.buffer?.data?.url.includes(expected)),weaponId);
+  }
+  h.win.contexts[0].currentTime+=1;let before=h.sources().length;
+  audio.play([{type:'bossHit',weaponId:'sword',damage:30}],run);
+  const hit=h.sources().slice(before);assert.ok(hit.some(s=>s.buffer?.data?.url.includes('punch-')));
+  assert.ok(hit.every(s=>!s.buffer?.data?.url.includes('/metal.wav')));
+  h.win.contexts[0].currentTime+=1;before=h.sources().length;
+  audio.play([{type:'bossAttack',bossId:'aergia',kind:'debris'}],run);
+  assert.ok(h.sources().slice(before).some(s=>s.buffer?.data?.url.includes('cloth2.wav')));
+});
+
+test('Aergia chains sound on release even when dodged, and use chain foley again on pull',async()=>{
+  const h=host(),audio=createAudio(h.win),r=createOlympusRun();encounterFor(r).entrance.finish(r);
+  audio.setScene('battle',r);await audio.unlock();await settle();
+  r.events=[];r.combatRng=()=>.625;r.olympus.nextAttack=0;
+  let releases=0;
+  for(let i=0;i<180;i++){
+    r.player.dodgeTime=1;r.step(createInput());h.win.contexts[0].currentTime+=1/60;
+    const before=h.sources().length;audio.play(r.events,r);
+    if(r.events.some(e=>e.type==='bossAttack'&&e.kind==='chains')){
+      releases++;assert.ok(h.sources().slice(before).some(s=>s.buffer?.data?.url.endsWith('/chain.wav')));
+      assert.equal(r.olympus.grab,null);
+    }
+    r.events=[];
+  }
+  assert.equal(releases,1);
+  const before=h.sources().length;audio.play([{type:'olympusChain'}],r);
+  assert.ok(h.sources().slice(before).some(s=>s.buffer?.data?.url.endsWith('/chain.wav')));
+  audio.setScene('pause',r);assert.ok(h.sources().every(s=>s.disconnected));
+});
+
+test('the real three-volley chain plays each throw once and ends with a heavy stone slam',async()=>{
+  const h=host(),audio=createAudio(h.win),r=createOlympusRun();encounterFor(r).entrance.finish(r);
+  audio.setScene('battle',r);await audio.unlock();await settle();
+  r.player.x=1000;r.player.y=280;r.combatRng=()=>.375;r.olympus.nextAttack=0;r.events=[];
+  let throws=0,slams=0;
+  for(let i=0;i<320&&!slams;i++){
+    r.step(createInput());h.win.contexts[0].currentTime+=1/60;const before=h.sources().length;audio.play(r.events,r);
+    const sources=h.sources().slice(before),has=file=>sources.some(s=>s.buffer?.data?.url.endsWith('/'+file));
+    for(const e of r.events)if(e.type==='bossAttack'){
+      if(e.kind==='debris'){throws++;assert.ok(has('cloth2.wav'));}
+      if(e.kind==='slam'){slams++;assert.ok(has('stone.wav')&&has('glass.wav'));}
+    }
+    r.events=[];
+  }
+  assert.equal(throws,3);assert.equal(slams,1);
 });
 
 test('browser-interrupted context can unlock while paused without sounding until resume', async () => {
