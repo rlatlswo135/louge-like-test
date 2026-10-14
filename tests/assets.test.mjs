@@ -45,9 +45,9 @@ test('current music and foley have provenance, real playable files and concise v
     }
   }
   const artCredits=await readFile(new URL('art/CREDITS.txt',assets),'utf8');
-  for(const file of ['arena-atlas-v3.png','arena-gate-v3.png','boss-atlas-v3.png','hero-atlas-v4.png','boss-windup-v4.png','weapon-atlas-v4.png','aergia-atlas-v4.png','temple-shard-v1.png']){
+  for(const file of ['arena-atlas-v3.png','arena-gate-v3.png','boss-atlas-v3.png','hero-atlas-v4.png','boss-windup-v4.png','weapon-atlas-v4.png','aergia-atlas-v4.png','temple-shard-v1.png','momos-atlas-v2.png','momos-mask-v2.png','momos-theatre-v1.png']){
     const bytes=await readFile(new URL('art/'+file,assets));assert.equal(bytes.toString('ascii',1,4),'PNG');
     assert.ok(artCredits.includes(createHash('sha256').update(bytes).digest('hex')),file);
-    if(file.startsWith('boss-')||file.includes('hero-atlas')||file.startsWith('weapon-atlas')||file.startsWith('aergia-atlas'))assert.equal(bytes[25],6,'actor sheets include alpha');
+    if(file.startsWith('boss-')||file.includes('hero-atlas')||file.startsWith('weapon-atlas')||file.startsWith('aergia-atlas')||file.startsWith('momos-atlas')||file.startsWith('momos-mask'))assert.equal(bytes[25],6,'actor sheets include alpha');
   }
 });

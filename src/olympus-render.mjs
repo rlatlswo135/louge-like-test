@@ -1,17 +1,20 @@
 import { getStats } from './game.mjs';
 import { AERGIA_RULES, AERGIA_DEBRIS_ANGLES } from './aergia.mjs';
 import { getHazardProgress } from './systems/geometry.mjs';
+import { momosPose, drawMomosGround, drawMomosRear, drawMomosDagger, drawMomosAirHazards, drawMomosEntrance } from './momos-render.mjs';
+import { MOMOS_ART } from './momos-art.mjs';
 
 const TAU=Math.PI*2;
 const clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
 const smooth=x=>{x=clamp(x);return x*x*(3-2*x);};
 const paths={floor:'aergia-temple-v2.png',boss:'aergia-atlas-v4.png',hero:'olympus-warrior-v1.png',debris:'temple-shard-v1.png'};
 
-export async function loadOlympusArt(win) {
-  const entries=await Promise.all(Object.entries(paths).map(async([key,name])=>{
+export async function loadOlympusArt(win,number=1) {
+  const selected=number===2?{floor:'momos-theatre-v1.png',boss:MOMOS_ART.boss,hero:paths.hero,mask:MOMOS_ART.mask}:paths;
+  const entries=await Promise.all(Object.entries(selected).map(async([key,name])=>{
     const image=new win.Image();image.src=new URL(`../assets/art/${name}`,import.meta.url).href;
     await image.decode();
-    if(key==='floor'||key==='debris')return [key,{image}];
+    if(key==='floor'||key==='debris'||key==='mask')return [key,{image}];
     const canvas=win.document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
     const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
     const data=ctx.getImageData(0,0,image.width,image.height).data,frames=[];
@@ -19,14 +22,15 @@ export async function loadOlympusArt(win) {
       const x0=Math.round(i%4*image.width/4),x1=Math.round((i%4+1)*image.width/4);
       // The raised bundle crosses the generated atlas's nominal row gutter.
       // Hand-checked boundaries keep its top and remove it from the crouch pose.
-      const top=key==='hero'&&i===14?900/1280:key==='boss'&&i===12?940/1280:Math.floor(i/4)/4;
-      const bottom=key==='hero'&&i===10?900/1280:key==='boss'&&i===8?940/1280:(Math.floor(i/4)+1)/4;
+      const momos=key==='boss'&&number===2;
+      const top=momos?MOMOS_ART.rowEdges[Math.floor(i/4)]/MOMOS_ART.sourceHeight:key==='hero'&&i===14?900/1280:key==='boss'&&number===1&&i===12?940/1280:Math.floor(i/4)/4;
+      const bottom=momos?MOMOS_ART.rowEdges[Math.floor(i/4)+1]/MOMOS_ART.sourceHeight:key==='hero'&&i===10?900/1280:key==='boss'&&number===1&&i===8?940/1280:(Math.floor(i/4)+1)/4;
       const y0=Math.round(top*image.height),y1=Math.round(bottom*image.height);
       let l=x1,r=x0,t=y1,b=y0;
       for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)if(data[(y*image.width+x)*4+3]>40){l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y);}
       frames.push({x:l,y:t,w:r-l+1,h:b-t+1,pivot:(x0+x1)/2});
     }
-    return [key,{image,frames,unit:(key==='hero'?88:152)/frames[key==='hero'?0:3].h}];
+    return [key,{image,frames,unit:(key==='hero'?88:number===2?MOMOS_ART.height:152)/frames[key==='hero'||number===2?0:3].h}];
   }));
   return Object.fromEntries(entries);
 }
@@ -35,6 +39,7 @@ export function cameraFor(run,reduced=false) {
   const o=run.olympus;
   if(reduced)return {x:640,y:360,zoom:1};
   if(o.phase==='intro'){
+    if(o.number===2){const out=smooth((o.phaseTime-2.4)/2.8);return {x:640,y:100+260*out,zoom:2.25-1.25*out};}
     const out=smooth((o.phaseTime-4.5)/2.1);
     return {x:640,y:245+115*out,zoom:1.55-.55*out};
   }
@@ -92,8 +97,20 @@ export function warriorPose(run) {
   return p.moving?1+Math.floor(run.time*9)%3:0;
 }
 function warning(g,h,time) {
-  if(h.t<0)return;
+  if(h.t<0&&h.visual!=='wheel-bomb')return;
   const progress=getHazardProgress(h),active=h.phase==='active';
+  if(h.shape==='polygon'){
+    const points=h.vertices,fade=active?clamp(1-(h.t-h.windup)/h.active):1;
+    const outline=()=>{g.moveTo(points[0].x,points[0].y);for(const p of points.slice(1))g.lineTo(p.x,p.y);g.closePath();};
+    g.save();g.beginPath();if(h.invert)g.rect(0,0,1280,720);outline();
+    g.fillStyle=`rgba(148,47,58,${active?.43*fade:.045+progress*.18})`;g.fill('evenodd');
+    g.beginPath();outline();g.strokeStyle=h.invert?'#c0ceac':'#c7a18b';g.lineWidth=2;g.stroke();
+    if(!active){
+      let length=0;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length];length+=Math.hypot(a.x-b.x,a.y-b.y);}
+      g.setLineDash([Math.max(.001,length*progress),length]);g.strokeStyle='#ffe0b2';g.lineWidth=4;g.stroke();
+    }else{g.globalAlpha=fade;g.shadowColor='#dca0aa';g.shadowBlur=14;g.strokeStyle='#f4c1c3';g.lineWidth=6;g.stroke();}
+    g.restore();return;
+  }
   if(h.shape==='field'){
     const fade=active?clamp(1-(h.t-h.windup)/h.active):1;
     g.save();g.beginPath();g.rect(0,0,1280,720);
@@ -241,12 +258,14 @@ function swordTrail(g,run,stats) {
 function dialogue(g,run) {
   const o=run.olympus;
   let line=o.dialogueUntil>run.time?o.dialogue:'';
+  if(o.number===2&&o.phase==='intro')return;
   if(o.phase==='intro')line=o.phaseTime<1.8?'…':o.phaseTime<3.25?'또 기도야?':o.phaseTime<5?'하아… 귀찮게.':'';
   if(!line)return;
-  const b=run.boss,y=Math.max(86,b.y-180);
+  const b=run.boss,momos=o.number===2,y=momos?Math.max(185,b.y-170):Math.max(86,b.y-180);
+  const x=momos?Math.max(450,Math.min(1060,b.x+(b.x<800?240:-240))):b.x;
   g.save();g.font='600 16px system-ui';g.textAlign='center';const w=g.measureText(line).width+34;
-  g.fillStyle='#191710e8';g.strokeStyle='#bc976478';g.lineWidth=1;g.beginPath();g.roundRect(b.x-w/2,y-23,w,37,6);g.fill();g.stroke();
-  g.fillStyle='#f6e7cc';g.fillText(line,b.x,y+2);g.restore();
+  g.fillStyle='#191710e8';g.strokeStyle='#bc976478';g.lineWidth=1;g.beginPath();g.roundRect(x-w/2,y-23,w,37,6);g.fill();g.stroke();
+  g.fillStyle='#f6e7cc';g.fillText(line,x,y+2);g.restore();
 }
 export function renderOlympus(view,run) {
   const g=view.g,{width:w,height:h,ratio}=view,o=run.olympus,p=run.player,b=run.boss,t=run.time,stats=getStats(run);
@@ -262,11 +281,21 @@ export function renderOlympus(view,run) {
   g.fillStyle='#0b12230c';g.fillRect(0,0,1280,720);
   for(let i=0;i<23;i++){const x=(i*137+t*7)%1250,y=100+(i*97+t*3)%520;ellipse(g,x,y,1.2,1.2,'#fff0ca66');}
   for(const hazard of run.hazards)warning(g,hazard,t);
-  chains(g,run);debrisAim(g,run);fragments(g,run,view.art);wipeEffect(g,run);
+  const momos=o.number===2;
+  if(momos)drawMomosGround(g,run,view.reduced);
+  else{chains(g,run);debrisAim(g,run);fragments(g,run,view.art);wipeEffect(g,run);}
   const drawBoss=()=>{
-    const pose=aergiaPose(run),breath=view.reduced?1:1+Math.sin(t*1.8)*.008;
-    ellipse(g,b.x,b.y+1,pose===14?77:49,18,'#30221677');
-    sprite(g,view.art.boss,pose,b.x,b.y,b.faceX<-.1,breath,run.status==='won'?.55:1);
+    // The close-up portrait owns the early reveal; fade in the world sprite
+    // during the zoom-out so a second crown cannot poke out behind the portrait.
+    const entranceAlpha=momos&&o.phase==='intro'?smooth((o.phaseTime-2.6)/1.1):1;
+    if(entranceAlpha===0)return;
+    g.save();g.globalAlpha*=entranceAlpha;
+    const pose=momos?momosPose(run):aergiaPose(run),breath=view.reduced?1:1+Math.sin(t*1.8)*.008;
+    const jump=momos&&o.action?.kind==='hammer'&&o.actionTime<o.action.windup?Math.sin(clamp(o.actionTime/o.action.windup)*Math.PI)*105:0;
+    // With the cinematic camera disabled, keep the entrance bow below the bars.
+    const y=momos&&o.phase==='intro'&&view.reduced?Math.max(260,b.y):b.y;
+    ellipse(g,b.x,y+1,momos?36:pose===14?77:49,momos?12:18,'#30221677');
+    sprite(g,view.art.boss,pose,b.x,y-jump,b.faceX<-.1,breath,run.status==='won'?.55:1);
     if(o.phase==='sleep'){
       g.font='italic 18px Georgia';g.fillStyle='#ead4a4';g.textAlign='center';g.fillText('z',b.x+60,b.y-60-Math.sin(t*2)*6);g.fillText('Z',b.x+75,b.y-85-Math.sin(t*2+1)*8);
     }
@@ -274,6 +303,7 @@ export function renderOlympus(view,run) {
       const a=t*2+i*TAU/3;g.save();g.translate(b.x+Math.cos(a)*31,b.y-98+Math.sin(a)*8);g.rotate(a);g.fillStyle='#ffe399';g.fillRect(-3,-3,6,6);g.restore();
     }
     if(b.hitFlash>0){g.save();g.globalAlpha=b.hitFlash;ellipse(g,b.x,b.y-50,23,33,'#fff5d7');g.restore();}
+    g.restore();
   };
   const drawHero=()=>{
     ellipse(g,p.x,p.y+1,22,9,'#241e1e88');
@@ -285,7 +315,9 @@ export function renderOlympus(view,run) {
     if(o.carrying&&Math.hypot(p.x-b.x,p.y-b.y)<145){g.font='600 13px system-ui';g.textAlign='center';g.fillStyle='#fff1b7';g.fillText('좌클릭 · 내려찍기',p.x,p.y+28);}
   };
   if(p.y<b.y){drawHero();drawBoss();}else{drawBoss();drawHero();}
+  if(momos)drawMomosAirHazards(g,run,view.reduced);
   for(const q of run.projectiles){
+    if(q.kind==='momos-dagger')drawMomosDagger(g,q);
     if(q.kind==='debris'){
       const velocity=Math.hypot(q.vx,q.vy)||1,dx=q.vx/velocity,dy=q.vy/velocity;
       g.save();g.lineCap='round';
@@ -300,7 +332,12 @@ export function renderOlympus(view,run) {
     else if(q.type==='impact'){g.beginPath();g.arc(q.x,q.y,25*(1-q.life/q.maxLife),0,TAU);g.strokeStyle=q.color;g.lineWidth=3;g.stroke();}
     else{g.translate(q.x,q.y);g.rotate(q.life*4);g.fillRect(-2,-2,4,4);}g.restore();
   }
-  dialogue(g,run);sleepTimer(g,run);g.restore();
+  if(momos)drawMomosRear(g,run);else sleepTimer(g,run);
+  dialogue(g,run);g.restore();
+  if(momos&&o.phase==='intro'){
+    g.save();g.translate(view.left,view.top);g.scale(view.scale,view.scale);g.beginPath();g.rect(0,0,1280,720);g.clip();
+    drawMomosEntrance(g,run,view.art,view.reduced);g.restore();
+  }
   const vignette=g.createRadialGradient(w/2,h*.47,h*.22,w/2,h/2,h*.8);vignette.addColorStop(0,'#080e1200');vignette.addColorStop(1,'#080d1694');g.fillStyle=vignette;g.fillRect(0,0,w,h);
   if(run.feedback.flash>0){g.fillStyle=`rgba(156,32,23,${run.feedback.flash*.13})`;g.fillRect(0,0,w,h);}
 }

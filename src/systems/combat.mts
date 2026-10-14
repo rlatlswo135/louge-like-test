@@ -78,12 +78,14 @@ export class CombatSystem {
           }
         }
       }else{
-        const targets=strikeEncounterTargets(state, (t: {x: number; y: number; r: number})=>segmentHitsCircle(q.prevX, q.prevY, q.x, q.y, t.x, t.y, q.radius+t.r), ()=>state.events.push({type:'sigilBroken'}), {kind:'projectile', secondary:q.secondary});
+        const encounter=encounterFor(state),hitTest=(t:{x:number;y:number;r:number})=>segmentHitsCircle(q.prevX,q.prevY,q.x,q.y,t.x,t.y,q.radius+t.r);
+        const targets=(encounter?.mechanic.strikeTargets(state,hitTest,q)||0)+strikeEncounterTargets(state,hitTest,()=>state.events.push({type:'sigilBroken'}),{kind:'projectile',secondary:q.secondary});
         if(targets){
           detonateProjectile(state, q);
           continue;
         }
-        const hit=state.boss.hp>0&&segmentHitsCircle(q.prevX, q.prevY, q.x, q.y, state.boss.x, state.boss.y, q.radius+state.boss.def.radius);
+        const target=encounter?.hitTarget(state)||{x:state.boss.x,y:state.boss.y,r:state.boss.def.radius};
+        const hit=state.boss.hp>0&&encounter?.canHit(state,q)!==false&&hitTest(target);
         if(hit){
           if(encounterReturnHit(state, q, (damage: number)=>hitBoss(state, damage, '#a4f1e0')))continue;
           const pass=q.returning?'returnHit':'outHit';
@@ -133,12 +135,13 @@ export class CombatSystem {
       if(!q.resolved&&q.t+1e-9>=q.windup&&q.t<q.windup+q.active){
         q.resolved=true;
         if(q.kind==='meteor')state.events.push({type:'spellImpact', element:q.element, secondary:q.secondary});
-        const hitTest=(t: {x: number; y: number; r: number})=>hazardHitsCircle(q, t.x, t.y, t.r);
+        const encounter=encounterFor(state),hitTest=(t: {x: number; y: number; r: number})=>hazardHitsCircle(q, t.x, t.y, t.r);
         if(!q.targetsHit){
-          const count=strikeEncounterTargets(state, hitTest, ()=>state.events.push({type:'sigilBroken'}), {kind:q.weapon?.kind||q.kind, secondary:q.secondary});
+          const count=(encounter?.mechanic.strikeTargets(state,hitTest,q)||0)+strikeEncounterTargets(state, hitTest, ()=>state.events.push({type:'sigilBroken'}), {kind:q.weapon?.kind||q.kind, secondary:q.secondary});
           if(count)q.targetsHit=true;
         }
-        if(!q.hit&&state.boss.hp>0&&hitTest({...state.boss, r:state.boss.def.radius})){
+        const target=encounter?.hitTarget(state)||{x:state.boss.x,y:state.boss.y,r:state.boss.def.radius};
+        if(!q.hit&&state.boss.hp>0&&encounter?.canHit(state,q)!==false&&hitTest(target)){
           q.hit=true;
           dealAttack(state, q);
           if(q.weapon?.kind==='melee'||q.kind==='counter'){
@@ -168,6 +171,7 @@ export function attackDamage(state: RunState, base: number, attack: Attack) {
   return base*Math.max(.1, multiplier);
 }
 export function hitBoss(state: RunState, damage: number, color: string, attack?: Attack) {
+  if(encounterFor(state)?.canHit(state,attack)===false)return;
   if(state.tutorial)state.tutorial.attacked=true;
   const floor=encounterFor(state)?.mechanic.damageFloor(state) ?? (state.tutorial&&getTutorialStep(state)<3?1:encounterDamageFloor(state));
   const dealt = Math.min(Math.max(0, state.boss.hp-floor), damage * (state.boss.raid ? RAID_DAMAGE_MULTIPLIER : 1));
@@ -265,6 +269,7 @@ export function specialHit(state: RunState, attack: Attack) {
   }
 }
 export function dealAttack(state: RunState, attack: Attack) {
+  if(encounterFor(state)?.canHit(state,attack)===false)return;
   let damage=attackDamage(state, attack.damage, attack), w: Partial<Weapon>=attack.weapon||{}, b=state.boss;
   if(b.raid?.counterWindow&&b.state==='windup'&&!attack.secondary&&
   (attack.originX-b.x)*b.faceX+(attack.originY-b.y)*b.faceY>0){

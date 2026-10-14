@@ -105,6 +105,26 @@ test('the real three-volley chain plays each throw once and ends with a heavy st
   assert.equal(throws,3);assert.equal(slams,1);
 });
 
+test('Momos entrance, cards, bicycle, toy hammer and knives have bounded distinct cues',async()=>{
+  const h=host(),audio=createAudio(h.win),r=createOlympusRun(2);audio.setScene('briefing',r);await audio.unlock();await settle();
+  let before=h.sources().length;audio.play([{type:'momosEntrance'},{type:'bossAttack',bossId:'momos',kind:'hammer'}],r);
+  const intro=h.sources().slice(before);assert.ok(intro.some(s=>s.buffer?.data?.url.endsWith('/bell.wav')));
+  assert.ok(intro.every(s=>!s.buffer?.data?.url.endsWith('/wood.wav')),'combat cannot sound during the entrance');
+  encounterFor(r).entrance.finish(r);audio.setScene('battle',r);
+  for(const [event,expected] of [
+    [{type:'bossAttack',bossId:'momos',kind:'daggers'},'thrust'],[{type:'bossAttack',bossId:'momos',kind:'bicycle'},'chain'],
+    [{type:'bossAttack',bossId:'momos',kind:'bicycle-blast'},'metal'],[{type:'bossAttack',bossId:'momos',kind:'hammer'},'wood'],
+    [{type:'bossAttack',bossId:'momos',kind:'clover'},'arcane'],[{type:'bossAttack',bossId:'momos',kind:'heart'},'arcane'],
+    [{type:'bossAttack',bossId:'momos',kind:'wheel-bomb'},'metal'],[{type:'bossAttack',bossId:'momos',kind:'diamond'},'glass'],
+    [{type:'bossAttack',bossId:'momos',kind:'spade'},'thrust'],[{type:'momosCardShow',count:2},'bell'],
+    [{type:'momosShuffle'},'cloth2'],[{type:'momosCardWrong'},'guard'],[{type:'momosCardCorrect',count:2},'bell'],[{type:'momosRearOpen'},'bell']
+  ]){
+    h.win.contexts[0].currentTime+=1;before=h.sources().length;audio.play([event],r);
+    assert.ok(h.sources().slice(before).some(s=>s.buffer?.data?.url.endsWith('/'+expected+'.wav')),JSON.stringify(event));
+  }
+  audio.setScene('pause',r);assert.ok(h.sources().every(s=>s.disconnected));
+});
+
 test('browser-interrupted context can unlock while paused without sounding until resume', async () => {
   const h=host(),audio=createAudio(h.win),r=createRun();
   await audio.unlock(); audio.setScene('pause',r);

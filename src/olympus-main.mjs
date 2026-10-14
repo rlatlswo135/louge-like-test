@@ -1,6 +1,7 @@
 import { OLYMPUS_GODS, olympusRoute } from './olympus-catalog.mjs';
 import { createOlympusRun } from './olympus.mjs';
-import { encounterFor } from './olympus-encounters.mjs';
+import { encounterFor, OLYMPUS_ENCOUNTERS } from './olympus-encounters.mjs';
+import { MOMOS_SUITS, MOMOS_RULES } from './momos.mjs';
 import { createClock, createInput } from './game.mjs';
 import { STEP, CARDS } from './content.mjs';
 import { createAudio } from './audio.mjs';
@@ -31,8 +32,22 @@ if(isCatalog){
 });
 
 async function boot(){
-  document.title='01 · 아에르기아 | 올림푸스';
-  const art=await loadOlympusArt(window),canvas=$('arena'),view=createOlympusView(canvas,art);
+  const definition=OLYMPUS_ENCOUNTERS.get(number).definition;
+  document.title=`${two(number)} · ${god.name} | 올림푸스`;document.body.classList.toggle('momos',number===2);
+  $('arena').setAttribute('aria-label',`${god.name} 보스 전장`);
+  $('battle-ui').querySelector('.wordmark span').textContent=`/ ${two(number)}`;
+  $('battle-ui').querySelector('.location').textContent=definition.arena.name;
+  $('boss-hud').querySelector('.boss-label span').textContent=definition.title;
+  $('boss-hud').querySelector('strong').textContent=god.name;
+  $('boss-fill').parentElement.setAttribute('aria-label',`${god.name} 체력`);
+  $('intro-title').querySelector('.eyebrow').textContent=number===1?'FIRST OF THE FORSAKEN':'THE MASK OF MOCKERY';
+  $('intro-title').querySelector('h1').textContent=god.name;$('intro-title').querySelector('p').textContent=definition.title;
+  $('mechanic').querySelector('.eyebrow').textContent=number===1?'신의 태만':'가면의 유희';
+  $('pause-screen').querySelector('.eyebrow').textContent=`${two(number)} / RAID TEST`;
+  if(number===2)$('loading-note').textContent='폐극장의 막 뒤, 웃음소리가 기다립니다.';
+  const next=OLYMPUS_GODS[number];
+  if(next){$('next-god').href=`/${two(next.number)}`;$('next-god').textContent=`${two(next.number)} · ${next.name}의 신전 →`;}
+  const art=await loadOlympusArt(window,number),canvas=$('arena'),view=createOlympusView(canvas,art);
   const input=createInput(),clock=createClock(),audio=createAudio(window);
   const preference=matchMedia('(prefers-reduced-motion: reduce)');
   view.reduced=preference.matches;$('reduced-motion').checked=view.reduced;
@@ -91,16 +106,44 @@ async function boot(){
     if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
     else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
   });
+  function momosHud(o){
+    let title='',note='',count='';const a=o.action;
+    const text=(id,value)=>{if($(id).textContent!==value)$(id).textContent=value;};
+    text('boss-condition',o.phase==='stunned'?`무방비 · ${Math.max(0,o.stunDuration-o.phaseTime).toFixed(1)}s`:o.rearOnly?'후방 약점만 피해':'MOMOS');
+    if(o.phase==='centering'){title='관객 참여 시간';note='보스가 보여주는 카드 순서를 기억하세요. 총 두 문제입니다.';}
+    else if(o.phase==='cards-show'){
+      const index=Math.min(3,Math.floor(o.phaseTime/MOMOS_RULES.cardHold));
+      title=`카드 순서를 기억하세요 · ${o.round}/2`;note=`${index+1}번째: ${MOMOS_SUITS[o.sequence[index]].name}`;
+    }else if(o.phase==='cards-shuffle'){title='카드를 섞는 중';note='바닥에 놓이면 보여준 순서대로 공격하세요.';}
+    else if(o.phase==='cards-answer'){
+      title=`기억한 순서대로 · ${o.round}/2`;note='다가가서 카드 한 장씩 좌클릭. 오답·시간 초과는 큰 피해!';
+      count=Array.from({length:4},(_,i)=>i<o.accepted?'◆':'◇').join('');
+    }else if(o.phase==='cards-result'){title=o.roundCorrect?'정답!':'땡!';note=o.round<2?'두 번째 문제를 준비하세요.':o.successes===2?'가면 뒤의 약점이 드러납니다.':'시험 종료. 전투가 이어집니다.';}
+    else if(o.phase==='stunned'){title='들켜 버린 뒷모습';note='짧은 기절! 뒤로 돌아 표식을 공격하세요. 이제 후방만 피해를 받습니다.';}
+    else if(a){
+      const outward=a.kind==='clover'?a.index===0:a.index===1;
+      title={daggers:'단검 난무',bicycle:a.rush?`연속 돌진 · ${(a.index??0)+1}/2`:'자전거 폭파 · 튀는 바퀴',hammer:`뿅망치 · ${(a.index??0)+1}/5`,
+        clover:outward?'♣ 클로버 · 밖으로!':'♣ 클로버 · 안으로!',heart:outward?'♥ 하트 · 밖으로!':'♥ 하트 · 안으로!',
+        diamond:`♦ 다이아 · 빈틈으로! ${(a.index??0)+1}/2`,spade:`♠ 처형창 · ${(a.index??0)+1}/3`}[a.kind];
+      note={daggers:'회전하는 탄막의 틈으로 이동하세요.',bicycle:a.rush?'두 번 빠르게 돌진합니다. 매회 새 예고선을 보고 옆으로 피하세요.':'빠른 돌진 → 종착지 폭발 → 바퀴가 세 번씩 튕깁니다. 착지 원까지 피하세요.',
+        hammer:'착지 원이 채워지기 전에 옆으로! 매번 새 위치를 노립니다.',clover:outward?'클로버 안에 피해. 바로 다음은 안으로!':'클로버 바깥에 피해. 발까지 완전히 안에 들어오세요.',
+        heart:outward?'이번에는 하트 안이 위험합니다. 밖으로!':'하트 안만 안전합니다. 바로 다음은 밖으로!',
+        diamond:'다이아 사이의 빈 바닥으로 이동! 두 번째에는 빈틈도 바뀝니다.',spade:'세 번 새로 겨눕니다. 창의 긴 궤적에서 옆으로 벗어나세요.'}[a.kind];
+      if(o.rearOnly)note+=' 보스는 후방 약점만 피해.';
+    }else if(o.rearOnly){title='가면 뒤의 허점';note='앞·옆 공격은 무효. 후방 표식으로 돌아 공격하세요.';}
+    $('mechanic').hidden=!title||run.status!=='playing';text('mechanic-title',title);text('mechanic-note',note);text('fragment-count',count);
+  }
   function hud(){
     const o=run.olympus,p=run.player,b=run.boss,intro=o.phase==='intro';
     const inward=o.action?.kind==='slam',inOut=o.phase==='combat'&&(inward||o.action?.kind==='debris');
     document.body.classList.toggle('in-intro',intro);document.body.classList.toggle('cinema-finished',!intro);
-    $('intro-title').style.opacity=intro&&o.phaseTime>2.8&&o.phaseTime<5.6?'1':'0';
+    $('intro-title').style.opacity=intro&&o.phaseTime>(o.number===2?3.5:2.8)&&o.phaseTime<5.6?'1':'0';
     const hp=Math.max(0,b.hp/b.maxHp),php=Math.max(0,p.hp/p.maxHp);
     $('boss-fill').style.transform=`scaleX(${hp})`;$('hero-fill').style.transform=`scaleX(${php})`;
     $('boss-fill').parentElement.setAttribute('aria-valuenow',String(Math.ceil(hp*100)));$('hero-fill').parentElement.setAttribute('aria-valuenow',String(Math.ceil(php*100)));
     $('boss-percent').textContent=`${Math.ceil(hp*100)}%`;$('hero-hp').textContent=`${Math.ceil(p.hp)} / ${p.maxHp}`;
     $('dodge-status').textContent=p.dodgeCooldown>0?`${p.dodgeCooldown.toFixed(1)}s`:'준비';
+    if(o.number===2){momosHud(o);return;}
     $('boss-condition').textContent=o.phase==='sleep'?'잠든 신 · 파편으로 깨우기':o.phase==='wipe'?'기도의 종말 · 전멸 공격':o.phase==='stunned'?`무방비 · ${Math.max(0,o.stunDuration-o.phaseTime).toFixed(1)}s`:o.phase==='rebuke'?'귀찮아! · 보스 곁으로 피하세요':inOut?(inward?'내려찍기 · 보스 곁으로':'파편 난사 · 보스에게서 떨어지세요'):o.enraged?'분노 · 행동 속도 증가':'AERGIA';
     const mechanic=inOut||['centering','sleep','smash','stunned','rebuke','wipe'].includes(o.phase);
     $('mechanic').hidden=!mechanic||run.status!=='playing';
@@ -127,10 +170,10 @@ async function boot(){
     renderOlympus(view,run);hud();
     if(run.status!=='playing'&&!ending){
       ending=true;input.clear();const won=run.status==='won';
-      $('result-label').textContent=won?'THE FIRST GOD HAS FALLEN':'THE ASCENT CONTINUES';
-      $('result-title').textContent=won?'첫 번째 신이 무너졌다.':'다시, 신에게.';
-      $('result-note').textContent=`${won?'아에르기아 격파':run.olympus.phase==='wipe'?'파편 수집 시간 초과 — 전멸':'아에르기아에게 패배'} · 전투 ${Math.floor(run.stageTime)}초 · 피격 ${run.hitsTaken}회`;
-      $('next-god').hidden=!won;$('result').hidden=false;$('again').focus({preventScroll:true});audio.setScene(won?'clear':'dead',run);
+      $('result-label').textContent=won?(number===1?'THE FIRST GOD HAS FALLEN':'THE MASK HAS FALLEN'):'THE ASCENT CONTINUES';
+      $('result-title').textContent=won?(number===1?'첫 번째 신이 무너졌다.':'조롱의 가면이 깨졌다.'):'다시, 신에게.';
+      $('result-note').textContent=`${won?god.name+' 격파':run.olympus.phase==='wipe'?'파편 수집 시간 초과 — 전멸':god.name+'에게 패배'} · 전투 ${Math.floor(run.stageTime)}초 · 피격 ${run.hitsTaken}회`;
+      $('next-god').hidden=!won||!next;$('result').hidden=false;$('again').focus({preventScroll:true});audio.setScene(won?'clear':'dead',run);
     }
     requestAnimationFrame(frame);
   }

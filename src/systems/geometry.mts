@@ -36,6 +36,16 @@ export function hazardHitsCircle(h: Hazard, x: number, y: number, r: number) {
   }
   if(h.charge)return segmentHitsCircle(h.x, h.y, h.x+Math.cos(h.angle)*h.length, h.y+Math.sin(h.angle)*h.length, x, y, r+h.width/2);
   if(h.shape==='field')return !(h.safe||[]).some(s=>Math.hypot(x-s.x, y-s.y)+r<s.radius);
+  if(h.shape==='polygon'){
+    const points=h.vertices||[];if(points.length<3)return false;
+    let inside=false;
+    for(let i=0,j=points.length-1;i<points.length;j=i++){
+      const a=points[j],b=points[i];
+      if(segmentHitsCircle(a.x,a.y,b.x,b.y,x,y,r))return true;
+      if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside;
+    }
+    return h.invert?!inside:inside;
+  }
   if (h.shape === 'circle') return circleHitsCircle(h.x, h.y, h.radius, x, y, r);
   if (h.shape === 'sector') return sectorHitsCircle(h, x, y, r);
   if (h.shape === 'lane') {

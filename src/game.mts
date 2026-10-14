@@ -108,9 +108,11 @@ export class GameRun implements RunState {
       state.events.push({type:'encounter', kind:state.encounter.kind});
     }
     olympusEncounter?.update(state,input,dt);
-    const locked=state.olympus?.controlsLocked;
+    const o=state.olympus,locked=o?.controlsLocked;
+    const blockAttack=o?.number===1 ? o.carrying||o.phase==='stunned'&&o.smashHeld
+      : o?.number===2&&(o.phase==='cards-answer'?!o.cardArmed:o.phase!=='combat'&&o.phase!=='stunned');
     const playerInput=locked ? {...input,up:false,down:false,left:false,right:false,attack:false,attackPressed:false,dodge:false,counter:false}
-      : state.olympus?.carrying || state.olympus?.phase==='stunned'&&state.olympus.smashHeld ? {...input,attack:false,attackPressed:false} : input;
+      : blockAttack ? {...input,attack:false,attackPressed:false} : input;
     GameRun.players.update(state, playerInput, dt);
     if(playerInput!==input){input.attackPressed=false;input.dodge=false;input.counter=false;}
     olympusEncounter?.clampActors(state);

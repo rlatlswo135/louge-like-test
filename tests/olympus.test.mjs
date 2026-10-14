@@ -25,7 +25,8 @@ test('all 50 routes use the documented order; only authored encounters are playa
   assert.deepEqual(OLYMPUS_GODS.slice(-3).map(g=>g.name),['하데스','포세이돈','제우스']);
   for(let i=1;i<=50;i++)assert.equal(olympusRoute(`/${String(i).padStart(2,'0')}/`),i);
   for(const p of ['/1','/00','/51','/01/x','//01','/01/../50'])assert.equal(olympusRoute(p),null);
-  for(let i=2;i<=50;i++)assert.throws(()=>createOlympusRun(i),RangeError);
+  assert.equal(createOlympusRun(2).boss.def.id,'momos');
+  for(let i=3;i<=50;i++)assert.throws(()=>createOlympusRun(i),RangeError);
 });
 test('encounter composes independently replaceable classes with isolated run state',()=>{
   const a=createOlympusRun(),b=createOlympusRun(),enc=encounterFor(a);
@@ -71,6 +72,16 @@ test('charge recovery and family handoff leave less than one second of downtime'
   const at=r.time;while(!r.olympus.action||r.olympus.action===a)r.step(createInput());
   assert.ok(r.time-at<.9);
 });
+test('three sweep warnings are shorter without changing the charge or cross combo',()=>{
+  for(const enraged of [false,true]){
+    const r=fight();r.olympus.enraged=enraged;r.player.hp=1e6;startFamily(r,0);const windups=[];let last;
+    for(let i=0;i<420&&windups.length<3;i++){
+      const a=r.olympus.action;if(a?.kind==='sweep'&&a!==last){windups.push(a.windup);last=a;}r.step(createInput());
+    }
+    assert.equal(windups.length,3);
+    for(const [i,w] of windups.entries())assert.ok(Math.abs(w-[.72,.6,.8][i]/(enraged?AERGIA_RULES.enrageSpeed:1))<1e-9);
+  }
+});
 test('each debris throw releases four fast, separated shots only after its locked warning',()=>{
   const r=fight();r.player.x=1000;r.player.y=r.boss.y;startFamily(r,1);
   const o=r.olympus;assert.equal(o.action.kind,'debris');const angle=o.angle;
@@ -108,7 +119,7 @@ test('throw windups warn against camping next to the boss, without early damage'
   while(h.t+STEP<h.windup-1e-9){r.step(createInput());assert.equal(r.player.hp,hp);}
   r.step(createInput());assert.equal(h.phase,'active');assert.ok(r.player.hp<hp);
 });
-function normalSlam(r){r.olympus.queue=[{kind:'slam',windup:1.55,active:.35,recovery:.45}];r.olympus.nextAttack=0;r.step(createInput());}
+function normalSlam(r){r.olympus.queue=[{kind:'slam',windup:1.2,active:.35,recovery:.45}];r.olympus.nextAttack=0;r.step(createInput());}
 test('normal slam shares the visible boss-safe circle, exact activation and one-hit damage',()=>{
   for(const inside of [false,true]){
     const r=fight();r.player.x=640;r.player.y=inside?380:600;normalSlam(r);
@@ -119,16 +130,25 @@ test('normal slam shares the visible boss-safe circle, exact activation and one-
     assert.equal(r.player.hp,hp-(inside?0:55*.88));const after=r.player.hp;advance(r,.3);assert.equal(r.player.hp,after);
   }
 });
-test('even from opposite corners, the slam allows an actual return after 200ms reaction',()=>{
-  for(const enraged of [false,true])for(const [bx,by,px,py] of [[100,130,1180,625],[1180,625,100,130],[640,280,100,625]]){
-    const r=fight();r.olympus.enraged=enraged;r.boss.x=bx;r.boss.y=by;r.player.x=px;r.player.y=py;normalSlam(r);
+test('faster inward slam allows corner return after 200ms, using a dodge only when ready',()=>{
+  for(const dodgeReady of [false,true])for(const enraged of [false,true])for(const [bx,by,px,py] of [[100,130,1180,625],[1180,625,100,130],[640,280,100,625]]){
+    const r=fight();r.olympus.enraged=enraged;r.boss.x=bx;r.boss.y=by;r.player.x=px;r.player.y=py;r.player.dodgeCooldown=dodgeReady?0:2;normalSlam(r);
     const hp=r.player.hp;advance(r,.2);
     for(let i=0;i<360&&r.olympus.action;i++){
       const dx=r.boss.x-r.player.x,dy=r.boss.y-r.player.y,move=Math.hypot(dx,dy)>110;
-      r.step({...createInput(),left:move&&dx<-3,right:move&&dx>3,up:move&&dy<-3,down:move&&dy>3});
+      r.step({...createInput(),left:move&&dx<-3,right:move&&dx>3,up:move&&dy<-3,down:move&&dy>3,dodge:dodgeReady&&i===0});
     }
-    assert.equal(r.olympus.action,null);assert.equal(r.player.hp,hp,`${enraged}: ${px},${py} -> ${bx},${by}`);
+    assert.equal(r.olympus.action,null);assert.equal(r.player.hp,hp,`${enraged}/${dodgeReady}: ${px},${py} -> ${bx},${by}`);
   }
+});
+test('inward warning is 1.2s nearby and cuts only available dodge travel from distant return time',()=>{
+  const near=fight();near.player.x=900;near.player.y=280;startFamily(near,1);
+  assert.equal(near.olympus.queue.at(-1).windup,1.2);
+  const ready=fight(),cooling=fight();
+  for(const r of [ready,cooling]){r.player.x=1100;r.player.y=600;}
+  cooling.player.dodgeCooldown=2;normalSlam(ready);normalSlam(cooling);
+  const stats=ready.getStats(),saving=stats.dodge.distance/stats.speed-stats.dodge.duration;
+  assert.ok(Math.abs(cooling.olympus.action.windup-ready.olympus.action.windup-saving)<1e-9);
 });
 test('sleep, death and victory cancel the normal slam and any delayed attacks',()=>{
   for(const ending of ['sleep','dead','won']){

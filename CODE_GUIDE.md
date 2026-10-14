@@ -2,26 +2,34 @@
 
 ## 올림푸스 보스 확장 구조
 
-`/01`의 아에르기아는 기존 `Boss` 엔티티와 `GameRun` 전투 시스템을 사용하면서, 보스 행동을 아래 조합으로 확장한다.
+`/01` 아에르기아와 `/02` 모모스는 기존 `Boss` 엔티티와 `GameRun` 전투 시스템을 사용하면서, 보스 행동을 아래 조합으로 확장한다.
 
 ```text
 BossEncounter
-└─ AergiaEncounter
-   ├─ entrance: AergiaEntrance extends BossEntrance
-   ├─ attacks:  AergiaAttacks  extends BossAttackSet
-   └─ mechanic: AergiaSlumber extends OncePerFightMechanic
+├─ AergiaEncounter
+│  ├─ entrance: AergiaEntrance extends BossEntrance
+│  ├─ attacks:  AergiaAttacks  extends BossAttackSet
+│  └─ mechanic: AergiaSlumber extends OncePerFightMechanic
+└─ MomosEncounter
+   ├─ entrance: MomosEntrance extends BossEntrance
+   ├─ attacks:  MomosAttacks  extends BossAttackSet
+   └─ mechanic: MomosCards   extends OncePerFightMechanic
 ```
 
 - [`src/boss-encounter.mts`](src/boss-encounter.mts): 구성 요소의 계약, 기믹 1회 발동, 행동 실행 순서. 기믹 진행 중에는 일반 패턴을 중단한다.
 - [`src/aergia.mts`](src/aergia.mts): 아에르기아의 정의·시작 상태·일반 패턴·수면 기믹·등장 타이밍. `AERGIA_RULES`에서 체력·반피 발동 조건·파편 수·기절 시간·수집 제한 16초·휘두르기 범위 330·분노 속도 1.3배를 조정한다. 파편 내려찍기는 피해 없이 기절만 주고, 수집 실패는 전멸 분기로 간다.
-- [`src/olympus-types.mts`](src/olympus-types.mts): 현재 아에르기아에 필요한 런 상태. 다음 보스의 상태 종류가 생기면 보스 번호로 구분하는 타입으로 확장한다.
+- [`src/momos.mts`](src/momos.mts): 모모스의 8계열 일반 패턴·2문제 카드 기믹·영구 후방 약점. `MOMOS_RULES`가 수치, `momosRearTarget()`이 약점 원의 단일 출처다. 폭발 자전거와 2연속 돌진은 별도 계열이며, 바퀴의 예정 착지도 일반 hazard로 전환/사망 시 함께 정리한다.
+- [`src/momos-shapes.mts`](src/momos-shapes.mts): 클로버/하트의 실제 폐곡선, 다이아 격자, 안전 경계까지 필요한 이동 시간. 그림·판정은 같은 정점을 쓰며 같은 회차 다이아의 피해 여부는 `hitGroup`으로 공유한다.
+- [`src/olympus-types.mts`](src/olympus-types.mts): `number`로 구분하는 `AergiaState | MomosState`. 런별 가변 상태만 보관한다.
+- 공통 확장점: `BossMechanic.strikeTargets()`로 실제 공격을 바닥 카드에 전달. `BossEncounter.hitTarget()/canHit()`은 명중 위치/방향, `blocksMovement()`는 공중 몸통의 길막 여부를 결정한다. 기본 구현은 기존 보스 동작을 유지한다.
 - [`src/olympus-encounters.mts`](src/olympus-encounters.mts): 구현된 보스 등록. [`src/olympus.mts`](src/olympus.mts): 등록된 보스의 `createState()`를 호출해 테스트 런과 프리셋을 만든다.
-- [`src/olympus-render.mjs`](src/olympus-render.mjs): 포즈 선택·카메라·검 잔상·사슬·파편. 렌더는 게임 상태와 난수를 변경하지 않는다. 마우스 좌표는 줌과 화면 여백을 역변환한다.
+- [`src/olympus-render.mjs`](src/olympus-render.mjs): 선택한 보스의 그림만 로드, 공통 카메라·검 잔상·사슬·파편. [`src/momos-render.mjs`](src/momos-render.mjs)는 모모스 자세·카드·후방 표식·단검·튀는 바퀴·스페이드 창·등장씬을 그린다. 렌더는 게임 상태와 난수를 변경하지 않는다. 마우스 좌표는 줌과 화면 여백을 역변환한다.
+- [`src/momos-art.mjs`](src/momos-art.mjs): 현행 imagegen v2 보스/초상 파일, 표시 키, 16자세의 실제 행 경계. 원화의 행 간격이 완전히 균등하지 않으므로 이미지 교체 시 경계를 확인해야 한다. 보존된 v1 SVG 제작 스크립트는 v2를 재생성하지 않는다.
 - [`src/olympus-main.mjs`](src/olympus-main.mjs): 개별 라우트·로딩·입력·정지·HUD·음원. [`public/olympus.html`](public/olympus.html) / [`public/olympus.css`](public/olympus.css)가 화면 구성이다.
 
 상속은 보스 정체성과 행동 계약에 사용하고, 일반 패턴·기믹·등장은 서로 포함 관계로 구성했다. 일반 패턴을 등장 연출의 부모 클래스로 만들지 않으므로 다음 보스에서 한 요소만 바꾸거나 공통 행동을 재사용하기 쉽다. 구성 요소 인스턴스는 행동만 제공하고 가변 상태는 `GameRun.olympus`에 있으므로 재도전이 이전 기믹 상태를 물려받지 않는다.
 
-다음 보스는 먼저 사용자의 메모에 맞는 컴포넌트와 런 상태를 구현하고 등록한다. 그 후 `olympus-catalog.mts`의 해당 `ready`를 켠다. 아직 메모가 없는 `/02`~`/50`은 준비 중 화면이며 기존 보스 행동을 대신 연결하지 않는다.
+다음 보스는 먼저 사용자의 메모에 맞는 컴포넌트와 런 상태를 구현하고 등록한다. 그 후 `olympus-catalog.mts`의 해당 `ready`를 켠다. 아직 구현하지 않은 `/03`~`/50`은 준비 중 화면이며 기존 보스 행동을 대신 연결하지 않는다.
 
 ## 코드는 어디에 있나
 

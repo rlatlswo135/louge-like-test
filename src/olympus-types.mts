@@ -16,8 +16,8 @@ export interface TempleFragment extends Point {
   landed: boolean;
   collected: boolean;
 }
-export interface OlympusState {
-  number: number;
+export interface AergiaState {
+  number: 1;
   phase: AergiaPhase;
   phaseTime: number;
   introDuration: number;
@@ -48,3 +48,53 @@ export interface OlympusState {
   dialogue: string;
   dialogueUntil: number;
 }
+
+export type MomosPhase = 'intro' | 'combat' | 'centering' | 'cards-show' | 'cards-shuffle' | 'cards-answer' | 'cards-result' | 'stunned';
+export type CardSuit = 'heart' | 'diamond' | 'club' | 'spade';
+export interface MomosAction {
+  kind: 'daggers' | 'bicycle' | 'hammer' | 'clover' | 'heart' | 'diamond' | 'spade';
+  rush?: boolean;
+  windup: number;
+  active: number;
+  recovery: number;
+  index?: number;
+}
+export interface FloorCard extends Point {
+  suit: CardSuit;
+  struck: boolean;
+}
+export interface MomosState {
+  number: 2;
+  phase: MomosPhase;
+  phaseTime: number;
+  introDuration: number;
+  gimmickUsed: boolean;
+  gimmickCount: number;
+  enraged: boolean;
+  controlsLocked: boolean;
+  action: MomosAction | null;
+  actionTime: number;
+  fired: boolean;
+  queue: MomosAction[];
+  lastFamily: number;
+  nextAttack: number;
+  angle: number;
+  origin: Point;
+  destination: Point;
+  walking: boolean;
+  walkTime: number;
+  dialogue: string;
+  dialogueUntil: number;
+  stunDuration: number;
+  round: number;
+  successes: number;
+  sequence: CardSuit[];
+  cards: FloorCard[];
+  accepted: number;
+  shown: number;
+  cardArmed: boolean;
+  answerDuration: number;
+  roundCorrect: boolean;
+  rearOnly: boolean;
+}
+export type OlympusState = AergiaState | MomosState;

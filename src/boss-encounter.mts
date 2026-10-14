@@ -1,4 +1,5 @@
-import type { RunState, InputState, BossDefinition } from './types.mjs';
+import type { RunState, InputState, BossDefinition, Attack } from './types.mjs';
+export type HitTarget = { x:number; y:number; r:number };
 import type { OlympusState } from './olympus-types.mjs';
 
 /** Components hold behavior; all mutable fight state belongs to the run. */
@@ -12,6 +13,7 @@ export abstract class BossAttackSet {
 export abstract class BossMechanic {
   abstract update(state: RunState, input: InputState, dt: number): boolean;
   abstract damageFloor(state: RunState): number;
+  strikeTargets(_state:RunState,_hitTest:(target:HitTarget)=>boolean,_attack:Attack):number {return 0;}
 }
 export abstract class OncePerFightMechanic extends BossMechanic {
   protected claim(state: RunState): boolean {
@@ -30,6 +32,9 @@ export abstract class BossEncounter {
     state.olympus.phaseTime+=dt;
     if(!this.mechanic.update(state,input,dt))this.attacks.update(state,dt);
   }
+  hitTarget(state:RunState):HitTarget {return {x:state.boss.x,y:state.boss.y,r:state.boss.def.radius};}
+  canHit(_state:RunState,_attack?:Attack):boolean {return true;}
+  blocksMovement(_state:RunState):boolean {return true;}
   clampActors(state: RunState): void {
     for(const actor of [state.player,state.boss]){
       actor.x=Math.max(100,Math.min(1180,actor.x));
