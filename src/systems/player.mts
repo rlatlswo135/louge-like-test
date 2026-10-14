@@ -1,6 +1,7 @@
 import { PLAYER } from '../content.mjs';
 import { ATTACK_RHYTHMS, attackBeat, timingSuccess } from '../attack-rhythm.mjs';
 import { encounterRockAt } from '../encounters.mjs';
+import { encounterFor } from '../olympus-encounters.mjs';
 import { clampToArena, moveVector } from '../systems/geometry.mjs';
 import { impactText } from '../systems/effects.mjs';
 import { emitAttack, queueAttack } from '../systems/combat.mjs';
@@ -156,7 +157,7 @@ export class PlayerSystem {
     clampToArena(p, PLAYER.radius);
     // 보스와 겹치지 않도록 밀어낸다(접촉 피해는 없다).
     const b = state.boss;
-    if (b.hp > 0) {
+    if (b.hp > 0 && encounterFor(state)?.blocksMovement(state)!==false) {
       const dx = p.x - b.x;
       const dy = p.y - b.y;
       const min = PLAYER.radius + b.def.radius;
@@ -268,7 +269,7 @@ export function cancelPlayerActions(state: RunState) {
 }
 export function resolvePlayerObstacles(state: RunState){
   const p=state.player, b=state.boss;
-  const obstacles=b.hp>0?[{x:b.x, y:b.y, r:b.def.radius}]:[];
+  const obstacles=b.hp>0&&encounterFor(state)?.blocksMovement(state)!==false?[{x:b.x, y:b.y, r:b.def.radius}]:[];
   if(state.encounter?.kind==='cover'){
     const rock=encounterRockAt(p.x, p.y, PLAYER.radius);
     if(rock)obstacles.push(rock);

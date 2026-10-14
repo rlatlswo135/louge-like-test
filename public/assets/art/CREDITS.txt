@@ -1,3 +1,11 @@
+Olympus / Momos original vector artwork — 2026-10-14
+
+momos-atlas-v1.png (1024x1024, sixteen poses), momos-mask-v1.png (512x512, transparent), momos-theatre-v1.png (1280x720, opaque): authored for this project as SVG code, rasterized offline with rsvg-convert and ImageMagick. Recipe: scripts/build-momos-art.mjs. Dark ruined theatre, original masked jester, daggers, bicycle and toy hammer. These are pose sprites and Canvas transforms, not skeletal animation or image-model output. No commercial game artwork or third-party image inputs used. The existing olympus-warrior-v1.png is reused separately for the player. No image tools required at runtime or for the normal Node tests.
+
+momos-atlas-v1.png SHA-256: e76fb517f78ea3898ba85a8c34c0a7f273105e49714b8d222e7b3bee9e23014e
+momos-mask-v1.png SHA-256: cffd48f8ecab1f5997f266a4fbe45c021e4d6d880cd1ea1efc2568c440cdfdf4
+momos-theatre-v1.png SHA-256: 17b3a907e1e8564465ad8dea0eaed7a0f466e7ceae83791363673fdb4105462a
+
 Olympus / Aergia deep-charcoal revision — 2026-10-14
 
 Current boss: aergia-atlas-v4.png. Offline recolor of the retained v2 atlas, with the same marble-prop replacement as v3. Deeper charcoal-blue cloth, ashen skin, near-black burgundy and cold iron. Mean palette luminance about 50% of v2 (29% darker than v3); silhouettes and alpha retained. No new image generation or third-party art. Rebuild: node scripts/build-aergia-art.mjs (ImageMagick offline; no runtime filters/readback). Temple remains v2; projectile remains temple-shard-v1.png.

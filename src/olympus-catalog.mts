@@ -11,7 +11,7 @@ export const OLYMPUS_GODS = Object.freeze([
     "name": "모모스",
     "latin": "Momos",
     "title": "비난과 조롱",
-    "ready": false
+    "ready": true
   },
   {
     "number": 3,

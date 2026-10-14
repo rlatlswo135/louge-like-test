@@ -191,7 +191,13 @@ export function createAudio(win) {
     },
     play(events, run) {
       if (!ready() || !events.length) return;
-      if (screen !== 'battle' || !run) return;
+      if(!run)return;
+      if(screen!=='battle'){
+        if(screen==='briefing'&&run.olympus?.number===2&&run.olympus.phase==='intro'&&events.some(e=>e.type==='momosEntrance')){
+          sample('cloth4',.65,.72);sample('bell',.45,1.35);
+        }
+        return;
+      }
       const weaponId = getStats(run).weapon.id;
       for (const event of events) {
         if (event.type==='swing'&&permitted('swing',.035))impact(event.weaponId||weaponId,false,event);
@@ -205,11 +211,26 @@ export function createAudio(win) {
         else if(event.type==='olympusSmash'){sample('stone',.95,.65);sample('glass',.5,.8);}
         else if(event.type==='olympusWipe'){sample('stone',.75,.55);sample('bell',.3,.55);}
         else if(event.type==='olympusEnrage')sample('kick',.65,.7);
+        else if(event.type==='momosEntranceEnd'||event.type==='momosCardsBegin'){sample('bell',.36,.8);sample('cloth2',.3,1.1);}
+        else if(event.type==='momosCardShow'){sample('wood',.2,1.3);sample('bell',.18,.85+(event.count||0)*.14);}
+        else if(event.type==='momosShuffle'){sample('cloth2',.5,1.55);sample('cloth4',.28,1.2);}
+        else if(event.type==='momosCardCorrect')sample('bell',.32,event.final?1.7:1.1+(event.count||0)*.08);
+        else if(event.type==='momosCardWrong')sample('guard',.55,.62);
+        else if(event.type==='momosRearOpen'){sample('bell',.55,.65);sample('cloth4',.4,1);}
         else if(event.type==='bossAttack'&&permitted('boss-attack',.12)){
           if(event.bossId==='aergia'){
             const sounds={debris:['cloth2',.6,1.35],sweep:['cloth4',.75,.8],punish:['cloth4',.75,.85],charge:['cloth4',.65,.65],chains:['chain',.9,.8],cross:['stone',.85,.72],rubble:['stone',.5,1.1],slam:['stone',1,.65],rebuke:['stone',1,.6]};
             if(event.kind==='rebuke'||event.kind==='slam')sample('glass',.4,.65);
             const cue=sounds[event.kind]||['cloth4',.55,.8];sample(...cue);continue;
+          }
+          if(event.bossId==='momos'){
+            const cues={daggers:['thrust',.55,1.5],bicycle:['chain',.45,1.3],'bicycle-blast':['metal',.65,.7],hammer:['wood',.7,1.3],clover:['arcane',.7,.7],heart:['arcane',.65,.9],diamond:['glass',.55,.8],spade:['thrust',.65,.65],'wheel-bomb':['metal',.55,1.15]};
+            const cue=cues[event.kind];if(cue)sample(...cue);
+            if(event.kind==='bicycle')sample('bell',.2,1.6);
+            if(event.kind==='bicycle-blast'){sample('fire',.55,.8);sample('wood',.65,.6);}
+            if(event.kind==='wheel-bomb')sample('fire',.3,1.1);
+            if(event.kind==='hammer')sample('punch-a',.55,1.4);
+            continue;
           }
           const family=stageTheme(run).sound;
           const material={steel:'sword-b',glass:'glass',ice:'glass',void:'arcane',lightning:'spark',water:'water-burst',fire:'fire',stone:'stone',cannon:'shotgun',flesh:'kick'}[family]||'guard';

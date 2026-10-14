@@ -246,6 +246,8 @@ export interface Hazard extends Partial<Point> {
   safe?: {x: number;
     y: number;
     radius: number}[];
+  vertices?: readonly Point[];
+  invert?: boolean;
   hitGroup?: HitGroup;
   hitDone?: boolean;
   nextHit?: number;

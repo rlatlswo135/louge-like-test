@@ -4,8 +4,9 @@ import { playerInvulnerable } from './systems/combat.mjs';
 import { getStats } from './systems/stats.mjs';
 import { segmentHitsCircle } from './systems/geometry.mjs';
 import { BossEncounter, BossEntrance, BossAttackSet, OncePerFightMechanic } from './boss-encounter.mjs';
-import type { RunState, InputState, Hazard, BossDefinition } from './types.mjs';
-import type { OlympusState, AergiaAction } from './olympus-types.mjs';
+import type { RunState as BaseRunState, InputState, Hazard, BossDefinition } from './types.mjs';
+import type { AergiaState, AergiaAction } from './olympus-types.mjs';
+type RunState = BaseRunState & { olympus: AergiaState };
 
 const TAU = Math.PI * 2;
 export const AERGIA_RULES = Object.freeze({ hp: 3600, threshold: .5, fragments: 6, stun: 2.5, pickupRadius: 34, smashRange: 145, intro: 6.8,
@@ -15,7 +16,7 @@ export const AERGIA_RULES = Object.freeze({ hp: 3600, threshold: .5, fragments: 
 export const AERGIA_DEBRIS_ANGLES = Object.freeze([Object.freeze([-.9,-.45,0,.45]),Object.freeze([-.45,0,.45,.9])]);
 export const aergiaSpeed = (state:RunState) => state.olympus.enraged ? AERGIA_RULES.enrageSpeed : 1;
 const clamp = (n: number, a: number, b: number) => Math.max(a, Math.min(b, n));
-export function createAergiaState(): OlympusState {
+export function createAergiaState(): AergiaState {
   return { number:1, phase:'intro', phaseTime:0, introDuration:AERGIA_RULES.intro, gimmickUsed:false, gimmickCount:0,
     enraged:false,collectDuration:AERGIA_RULES.collectDuration,fragments:[], collected:0, carrying:false, smashHeld:false, controlsLocked:true, action:null, actionTime:0, fired:false,
     queue:[], lastFamily:-1, nextAttack:1.3, angle:Math.PI/2, origin:{x:640,y:180}, destination:{x:640,y:300},
@@ -73,7 +74,8 @@ function beginAction(state:RunState, action:AergiaAction, dt:number) {
   // A wall-side boss must still leave time to return from the opposite corner.
   if(action.kind==='slam'){
     const x=Math.abs(p.x-b.x),y=Math.abs(p.y-b.y),walk=Math.max(x,y)+(Math.SQRT2-1)*Math.min(x,y);
-    action.windup=Math.max(action.windup,(walk-AERGIA_RULES.safeRadius+PLAYER.radius)/getStats(state).speed+.35);
+    const stats=getStats(state),dodge=p.dodgeCooldown<=0&&p.dodgeTime<=0?Math.max(0,stats.dodge.distance-stats.speed*stats.dodge.duration):0;
+    action.windup=Math.max(action.windup,(walk-AERGIA_RULES.safeRadius+PLAYER.radius-dodge)/stats.speed+.3);
   }
   o.action=action; o.actionTime=0; o.fired=false; o.origin={x:b.x,y:b.y};
   o.angle=Math.atan2(p.y-b.y,p.x-b.x); b.faceX=Math.cos(o.angle); b.faceY=Math.sin(o.angle);
@@ -110,12 +112,12 @@ function nextFamily(state:RunState):AergiaAction[] {
   const choices=[0,1,2,3].filter(kind=>kind!==o.lastFamily);
   const kind=choices[Math.floor(state.combatRng()*choices.length)];o.lastFamily=kind;
   if(kind===0){
-    const combo:AergiaAction[]=[0,1,2].map(index=>({kind:'sweep',index,windup:[.88,.76,1.02][index],active:.16,recovery:.2}));
+    const combo:AergiaAction[]=[0,1,2].map(index=>({kind:'sweep',index,windup:[.72,.6,.8][index],active:.16,recovery:.2}));
     combo.push({kind:'charge',windup:.95,active:.46,recovery:.35,index:3});return combo;
   }
   if(kind===1){
     const combo:AergiaAction[]=[0,1,2].map(index=>({kind:'debris',index,windup:index===0?.85:.38,active:.1,recovery:.04}));
-    combo.push({kind:'slam',windup:1.55,active:.35,recovery:.45});return combo;
+    combo.push({kind:'slam',windup:1.2,active:.35,recovery:.45});return combo;
   }
   if(kind===2)return [{kind:'chains',windup:1.05,active:.08,recovery:.32}];
   return [{kind:'cross',index:0,windup:1.12,active:.16,recovery:.06},{kind:'cross',index:1,windup:.51,active:.16,recovery:.45}];
@@ -254,7 +256,7 @@ export class AergiaAttacks extends BossAttackSet {
   update(state:RunState,dt:number):void { updateCombat(state,dt); }
 }
 export class AergiaEncounter extends BossEncounter {
-  createState():OlympusState { return createAergiaState(); }
+  createState():AergiaState { return createAergiaState(); }
   readonly definition:BossDefinition = {
     id:'aergia',name:'아에르기아',title:'기도를 외면한 태만의 신',color:'#bd8559',hp:AERGIA_RULES.hp,speed:53,idle:1.2,radius:48,
     patterns:[],special:false,phaseThresholds:[],arena:{name:'응답 없는 기도의 신전',biome:0,motif:'olympus',music:'drums',sound:'stone'}
